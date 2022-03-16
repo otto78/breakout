@@ -1,0 +1,39 @@
+body{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url(./media/bg-stars.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;   
+}
+
+.board{
+    height: 80vh;
+    border: 2px solid rgba(0, 128, 0, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 0 4px 1px rgba(0, 128, 0, 0.8), 0 0 4px 1px rgba(0, 128, 0, 0.8) inset;
+    backdrop-filter: blur(2px);
+}
+
+#tabellone{
+    height: 6vh;
+    color: green;
+    font-size: 1.2rem;
+    background-color: rgba(0, 128, 0, 0.1);   
+}
+
+#playGround{
+    height: 74vh;
+    border: 2px solid rgba(128, 0, 0, 0.8);
+}
+
+#tabellone p{
+    margin: 5px 0 5px 0;   
+}
+
+#command{
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 0 4px 1px rgba(0, 128, 0, 0.8), 0 0 4px 1px rgba(0, 128, 0, 0.8) inset;
+}
+
