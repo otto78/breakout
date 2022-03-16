@@ -1,3 +1,5 @@
+/* Stile del playGround */
+
 body{
     background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url(./media/bg-stars.jpg);
     background-size: cover;
@@ -22,7 +24,8 @@ body{
 
 #playGround{
     height: 74vh;
-    border: 2px solid rgba(128, 0, 0, 0.8);
+    position: relative;
+    /* border: 2px solid rgba(128, 0, 0, 0.8); */
 }
 
 #tabellone p{
@@ -35,5 +38,18 @@ body{
     height: 80px;
     border-radius: 50%;
     box-shadow: 0 0 4px 1px rgba(0, 128, 0, 0.8), 0 0 4px 1px rgba(0, 128, 0, 0.8) inset;
+}
+
+/* Stile del pad */
+
+.pad{
+    position: relative;
+    height: 3%;
+    width: 15%;
+    transform: translateX(-50%);
+    border: 1px solid rgba(0, 128, 0, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 0 2px 1px rgba(0, 128, 0, 0.8), 0 0 2px 1px rgba(0, 128, 0, 0.8) inset;
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
 }
 
