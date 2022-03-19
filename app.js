@@ -1,3 +1,5 @@
+// Variabili globali
+// ----------------------------------------------------------
 let playGround = document.querySelector('#playGround')
 let command = document.querySelector('#command')
 
@@ -8,39 +10,53 @@ let yEnd = playGround.getBoundingClientRect().bottom
 let width = playGround.getBoundingClientRect().width
 let height = playGround.getBoundingClientRect().height
 
+let punti = document.querySelector('#punti')
+let score = 0
 
 let timderId
 //console.log('Width: ' + width)
 //console.log('xStart: '+xStart)
 
 
-//Creazione pad
 
+
+
+// Creazione pad
+// ----------------------------------------------------------
 let pad = document.createElement('div')
 pad.classList.add('pad', 'd-flex', 'justify-content-between')
 pad.innerHTML =`
 <div class="corner"></div>
 <div class="corner"></div>
 `
+padWidth = width*0.15
+padHeight = height*0.03
 
 playGround.append(pad)
 
-padWidth = pad.getBoundingClientRect().width
-//docWidth = playGround.innerWidth
+
+
 
 //console.log('pad: '+padWidth)
 
-padHeight = pad.getBoundingClientRect().height
-pad.style.top = ((height-padHeight*3) +'px')
+pad.style.bottom = ((padHeight*2) +'px')
+//pad.style.top = ((height-padHeight*3) +'px')
 let padPosition = width/2
 pad.style.left = padPosition +'px'
 
+document.addEventListener('keydown', movePadKey)
+playGround.addEventListener('mousemove', movePadMouse);
+//command.addEventListener('pointerdown',  movePadCommand)
 
-//create a brick
+
+
+
+
+// Creazione Brick
+// ----------------------------------------------------------
 brickWidth = width*0.10
 brickHeight = height*0.05
-console.log('brickWidth:' + brickWidth)
-console.log('brickHeight:' + brickHeight)
+
 
 
 class Brick{
@@ -62,22 +78,12 @@ let bricks1 = []
 for(let j=0; j<5; j++){
     for(let i=0; i<8; i++){
         x = 10 + i*10
-        y = 10 + (j/2)*10
+        y = 65 + (j/2)*10
         bricks1.push(new Brick(x,y))
     }
 }
 
-
-console.log(bricks1)
-
-
-
-
-    
-    
-    
-// ]
-
+console.table(bricks1[39])
 
 function addBricks1(){
     for(let i=0; i<bricks1.length; i++){
@@ -85,47 +91,31 @@ function addBricks1(){
         brick.classList.add('brick')
        
         brick.style.left = bricks1[i].bottomLeft[0] + 'px'
-        brick.style.top = bricks1[i].bottomLeft[1] + 'px'
+        brick.style.bottom = bricks1[i].bottomLeft[1] + 'px'
         
         playGround.append(brick)
-        // console.log('brick: '+ i)
-        // console.log(bricks[i].bottomLeft[0])
-        // console.log(bricks[i].bottomLeft[1])
-
+        
     }
 }
-
 
 addBricks1()
 
 
 
 
-
-
-
-
-
-
-
-document.addEventListener('keydown', movePadKey)
-playGround.addEventListener('mousemove', movePadMouse);
-//command.addEventListener('pointerdown',  movePadCommand)
-
-
-//Creazione ball
+// Creazione ball
+// ----------------------------------------------------------
 let ball = document.createElement('div')
 ball.setAttribute('id', 'ball')
-
-xDirection = 5
-yDirection = 5
-
-
-const ballStart = [(width/2-10), (height - padHeight*4 -5)]
+let ballDiametro = 20
+let ballStart = [(width/2-(ballDiametro/2)), (padHeight*3)]
 let ballCurrentPosition = ballStart
-drowBall()
-let ballDiametro = ball.getBoundingClientRect().width
 
+let xDirection = 5
+let yDirection = 5
+let speed = 20
+
+drowBall()
 
 document.addEventListener('click', ballMove)
 
@@ -133,11 +123,8 @@ document.addEventListener('click', ballMove)
 
 
 
-
-
-
-//--------------------------------------------------------------------
-//Funzioni Pad
+// Funzioni Pad
+// ----------------------------------------------------------
 
 function drowPad(){
     
@@ -229,51 +216,69 @@ function movePadMouse(event) {
     
 // })
 
-// Funzioni ball
 
+
+
+// Funzioni ball
+// ----------------------------------------------------------
 function drowBall(){
     ball.style.left = ballCurrentPosition[0] + 'px'
-    ball.style.top = ballCurrentPosition[1] + 'px'
+    ball.style.bottom = ballCurrentPosition[1] + 'px'
+    
     playGround.append(ball)
 }
 
 function ballMove(){
     document.removeEventListener('click', ballMove)
-    timerId = setInterval(move, 20)
+    timerId = setInterval(move, speed)
+
+    function move(){
+
+        checkCollision()
+        checkBrickCollision()
+
+        ballCurrentPosition[0] += xDirection 
+        ballCurrentPosition[1] += yDirection    
+        
+        ball.remove()
+        drowBall()  
+    }
 }
 
-function move(){
-    checkCollision()
-    ballCurrentPosition[0] += xDirection 
-    ballCurrentPosition[1] -= yDirection    
-    
-    ball.remove()
-    drowBall()  
-}
+
 
 function checkCollision(){
-    let data = document.querySelector('#data')
-    data.innerHTML = `x: ${xDirection}      y: ${yDirection}` 
-    // console.log('x: '+xDirection)
-    // console.log('y: '+ yDirection)
     
-    if(ballCurrentPosition[0]>= width-ballDiametro || ballCurrentPosition[0] <= 0){
-        changeXDirection()
-    }
 
-    if(ballCurrentPosition[1]<= 0){
+    let data = document.querySelector('#data')
+    data.innerHTML = `
+    <div>Px: ${ballCurrentPosition[0]}</div>
+    <div>Py: ${ballCurrentPosition[1]}</div>
+    <div>x: ${xDirection}</div>
+    <div>y: ${yDirection}</div>
+    ` 
+    
+    // Walls collision
+    if(ballCurrentPosition[0]> width-ballDiametro || ballCurrentPosition[0] <= 0){
+        changeXDirection()
+        //changeDirection()
+    }
+    // Ceil collision
+    if(ballCurrentPosition[1]>= height- ballDiametro){
         changeYDirection()
+        //changeDirection()
     }
 
     // Pad Bounce
-    if((ballCurrentPosition[1] > (height-padHeight*4 - 3))
+    if((ballCurrentPosition[1] < (padHeight*3))
     && (ballCurrentPosition[0] >= (padPosition - padWidth/2 + 20))
     && (ballCurrentPosition[0] <= (padPosition + padWidth/2 - 20))){
         changeYDirection()
+        //changeDirection()
     }
     
     // Pad Left corner bounce
-    if((ballCurrentPosition[1] > (height-padHeight*4 - 3))
+    if((ballCurrentPosition[1] < (padHeight*3))
     && (ballCurrentPosition[0] >= (padPosition - padWidth/2))
     && (ballCurrentPosition[0] < (padPosition - padWidth/2 + 20))){
         console.log('left corner')
@@ -288,10 +293,11 @@ function checkCollision(){
         }
         
         changeYDirection()
+        //changeDirection()
     }
 
     // Pad Right corner bounce
-    if((ballCurrentPosition[1] > (height-padHeight*4 - 3))
+    if((ballCurrentPosition[1] < (padHeight*3))
     && (ballCurrentPosition[0] > (padPosition + padWidth/2 -20))
     && (ballCurrentPosition[0] <= (padPosition + padWidth/2))){
         console.log('right corner')
@@ -306,15 +312,36 @@ function checkCollision(){
         }
 
         changeYDirection()
+        //changeDirection()
     }
 
 
     // Lost
-    if(ballCurrentPosition[1] >= height-30){
+    if(ballCurrentPosition[1] <= ballDiametro/2){
         clearInterval(timerId)
     }
 
 }
+// function changeDirection(){
+//     if(xDirection>0 && yDirection>0){
+//         yDirection = - yDirection
+//         return
+//     }
+//     if(xDirection>0 && yDirection<0){
+//         xDirection = - xDirection
+//         return
+//     }
+
+//     if(xDirection<0 && yDirection<0){
+//         yDirection = - yDirection
+//         return
+//     }
+
+//     if(xDirection<0 && yDirection>0){
+//         xDirection = - xDirection
+//         return
+//     }
+// }
 
 function changeXDirection(){
     xDirection = - xDirection
@@ -323,6 +350,46 @@ function changeXDirection(){
 function changeYDirection(){
     yDirection = - yDirection
 }
+
+
+
+
+
+// Brick collision
+// ----------------------------------------------------------
+function checkBrickCollision(){
+    
+    //brick[39]
+    // hit lato inferiore
+    for(let i=0; i<bricks1.length; i++){
+        
+        let mattoni = Array.from(document.querySelectorAll('.brick'))
+        
+        if(((ballCurrentPosition[0]+ballDiametro) > bricks1[i].bottomLeft[0]
+            && (ballCurrentPosition[0]+ballDiametro) < bricks1[i].bottomRight[0])
+            
+            && (((ballCurrentPosition[1]+ballDiametro) > (bricks1[i].bottomLeft[1]))
+            && (ballCurrentPosition[1] < bricks1[i].topLeft[1])))
+            {
+                changeYDirection()
+                mattoni[i].remove()
+                bricks1.splice(i,1)
+                score++
+                punti.innerHTML = score
+                
+            }
+            //console.log(bricks1)
+            // if (bricks1.length ==0){
+            //     clearInterval(timderId)
+            // }
+    }
+}
+
+
+
+
+
+
 
 
 
