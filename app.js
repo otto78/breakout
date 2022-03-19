@@ -37,7 +37,7 @@ pad.style.left = padPosition +'px'
 
 
 //create a brick
-brickWidth = width*0.15
+brickWidth = width*0.10
 brickHeight = height*0.05
 console.log('brickWidth:' + brickWidth)
 console.log('brickHeight:' + brickHeight)
@@ -45,6 +45,10 @@ console.log('brickHeight:' + brickHeight)
 
 class Brick{
     constructor(x, y){
+
+        x = width*(x/100)
+        y = height*(y/100)
+
         this.bottomLeft =[x, y]
         this.bottomRight = [x + brickWidth, y]
         this.topLeft = [x, y + brickHeight]
@@ -52,24 +56,36 @@ class Brick{
     }
 }
 
-let bricks =[
-    new Brick(width*0.05, height*0.05),
-    new Brick(width*0.22, height*0.05),
-    new Brick(width*0.39, height*0.05),
-    new Brick(width*0.56, height*0.05),
-    new Brick(width*0.73, height*0.05),
-    
-    
-]
+// level 1
+let bricks1 = []
+
+for(let j=0; j<5; j++){
+    for(let i=0; i<8; i++){
+        x = 10 + i*10
+        y = 10 + (j/2)*10
+        bricks1.push(new Brick(x,y))
+    }
+}
 
 
-function addBricks(){
-    for(let i=0; i<bricks.length; i++){
+console.log(bricks1)
+
+
+
+
+    
+    
+    
+// ]
+
+
+function addBricks1(){
+    for(let i=0; i<bricks1.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick')
        
-        brick.style.left = bricks[i].bottomLeft[0] + 'px'
-        brick.style.top = bricks[i].bottomLeft[1] + 'px'
+        brick.style.left = bricks1[i].bottomLeft[0] + 'px'
+        brick.style.top = bricks1[i].bottomLeft[1] + 'px'
         
         playGround.append(brick)
         // console.log('brick: '+ i)
@@ -80,7 +96,7 @@ function addBricks(){
 }
 
 
-addBricks()
+addBricks1()
 
 
 
