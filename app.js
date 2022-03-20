@@ -3,6 +3,7 @@
 let playGround = document.querySelector('#playGround')
 let command = document.querySelector('#command')
 
+// PlayGround dimensions
 let xStart = playGround.getBoundingClientRect().x
 let xEnd = playGround.getBoundingClientRect().right
 let yStart = playGround.getBoundingClientRect().y
@@ -83,7 +84,7 @@ for(let j=0; j<5; j++){
     }
 }
 
-console.table(bricks1[39])
+//console.table(bricks1[39])
 
 function addBricks1(){
     for(let i=0; i<bricks1.length; i++){
@@ -108,11 +109,11 @@ addBricks1()
 let ball = document.createElement('div')
 ball.setAttribute('id', 'ball')
 let ballDiametro = 20
-let ballStart = [(width/2-(ballDiametro/2)), (padHeight*3)]
+let ballStart = [(width/2-(ballDiametro/2)), (padHeight*3 + 30)]
 let ballCurrentPosition = ballStart
 
-let xDirection = 5
-let yDirection = 5
+let xDirection = 3
+let yDirection = 3
 let speed = 20
 
 drowBall()
@@ -223,7 +224,7 @@ function movePadMouse(event) {
 // ----------------------------------------------------------
 function drowBall(){
     ball.style.left = ballCurrentPosition[0] + 'px'
-    ball.style.bottom = ballCurrentPosition[1] + 'px'
+    ball.style.bottom = (ballCurrentPosition[1] -yDirection*2) + 'px'
     
     playGround.append(ball)
 }
@@ -245,18 +246,21 @@ function ballMove(){
     }
 }
 
+let data = document.createElement('div')
+data.classList.add('data')
+playGround.append(data)
 
 
 function checkCollision(){
-    
 
-    let data = document.querySelector('#data')
+     
     data.innerHTML = `
     <div>Px: ${ballCurrentPosition[0]}</div>
-    <div>Py: ${ballCurrentPosition[1]}</div>
+    <div>Py: ${Math.floor(ballCurrentPosition[1])}</div>
     <div>x: ${xDirection}</div>
     <div>y: ${yDirection}</div>
     ` 
+    
     
     // Walls collision
     if(ballCurrentPosition[0]> width-ballDiametro || ballCurrentPosition[0] <= 0){
@@ -264,64 +268,78 @@ function checkCollision(){
         //changeDirection()
     }
     // Ceil collision
-    if(ballCurrentPosition[1]>= height- ballDiametro){
+    if(ballCurrentPosition[1]>= height - ballDiametro){
         changeYDirection()
         //changeDirection()
     }
 
-    // Pad Bounce
-    if((ballCurrentPosition[1] < (padHeight*3))
-    && (ballCurrentPosition[0] >= (padPosition - padWidth/2 + 20))
-    && (ballCurrentPosition[0] <= (padPosition + padWidth/2 - 20))){
-        changeYDirection()
-        //changeDirection()
-    }
-    
-    // Pad Left corner bounce
-    if((ballCurrentPosition[1] < (padHeight*3))
-    && (ballCurrentPosition[0] >= (padPosition - padWidth/2))
-    && (ballCurrentPosition[0] < (padPosition - padWidth/2 + 20))){
-        console.log('left corner')
-        
-        if(xDirection>=0){
-            xDirection += 1
-            yDirection += 1
-           
-        }else{
-            xDirection += -1
-            yDirection += 1 
-        }
-        
-        changeYDirection()
-        //changeDirection()
-    }
+    // Pad Collision
+    if((ballCurrentPosition[1] < (padHeight*3 + ballDiametro/4)) && (ballCurrentPosition[1] > (padHeight*2 + ballDiametro/4))){
 
-    // Pad Right corner bounce
-    if((ballCurrentPosition[1] < (padHeight*3))
-    && (ballCurrentPosition[0] > (padPosition + padWidth/2 -20))
-    && (ballCurrentPosition[0] <= (padPosition + padWidth/2))){
-        console.log('right corner')
-
-        if(xDirection>=0){
-            xDirection += 1
-            yDirection += 1
+        if(
+            // Center bounce
+            (ballCurrentPosition[0] >= (padPosition - padWidth/2)) && (ballCurrentPosition[0] <= (padPosition + padWidth/2))){
             
-        }else{
-            xDirection += -1
-            yDirection += 1 
-        }
-
-        changeYDirection()
-        //changeDirection()
-    }
-
-
-    // Lost
-    if(ballCurrentPosition[1] <= ballDiametro/2){
-        clearInterval(timerId)
-    }
-
+            
+            changeYDirection()
+            //changeDirection()
+            
+        } 
+        
+        // Pad Left corner bounce
+        
+        // if (
+            
+            //             ((ballCurrentPosition[0] > (padPosition - padWidth/2)
+            //                 &&  (ballCurrentPosition[0] < (padPosition - padWidth/2 + 20))))
+            
+            //         &&  ((ballCurrentPosition[1] < (padHeight*3)) && ((ballCurrentPosition[1]+ballDiametro) > (padHeight*2)))
+            
+            // )
+            //     {
+                //     console.log('left corner')
+                
+                //     if(xDirection>=0){
+                    //         xDirection += 1
+                    //         yDirection += 1
+                    
+                    //     }else{
+                        //         xDirection += -1
+                        //         yDirection += 1 
+                        //     }
+                        
+                        //     changeYDirection()
+                        //     //changeDirection()
+                        // } 
+                        
+                        // Right corner bounce
+                        // if(
+                        // (ballCurrentPosition[0] > (padPosition + padWidth/2 -20)) && (ballCurrentPosition[0] <= (padPosition + padWidth/2))){
+                        //     console.log('right corner')
+                            
+                        //     if(xDirection>=0){
+                        //         xDirection += 1
+                        //         yDirection += 1
+                                
+                        //     }else{
+                        //     xDirection += -1
+                        //     yDirection += 1 
+                        //     }
+        
+                        //     changeYDirection()
+        
+                            //clearInterval(timerId)
+                            //changeDirection()
+                        }
+    
+                        
+                        // Lost
+                        if(ballCurrentPosition[1] < -yDirection){
+                            clearInterval(timerId)
+                        }
 }
+
+//}
 // function changeDirection(){
 //     if(xDirection>0 && yDirection>0){
 //         yDirection = - yDirection
@@ -359,8 +377,8 @@ function changeYDirection(){
 // ----------------------------------------------------------
 function checkBrickCollision(){
     
-    //brick[39]
-    // hit lato inferiore
+    
+    
     for(let i=0; i<bricks1.length; i++){
         
         let mattoni = Array.from(document.querySelectorAll('.brick'))
@@ -371,6 +389,7 @@ function checkBrickCollision(){
             && (((ballCurrentPosition[1]+ballDiametro) > (bricks1[i].bottomLeft[1]))
             && (ballCurrentPosition[1] < bricks1[i].topLeft[1])))
             {
+                clearInterval(timerId)
                 changeYDirection()
                 mattoni[i].remove()
                 bricks1.splice(i,1)

@@ -74,7 +74,7 @@ body{
     width: 20px;
     
     
-    border-radius: 50%;
+    /* border-radius: 50%; */
     border: 1px solid rgba(255, 255, 0, 0.8);
     box-shadow: 0 0 4px 1px rgba(255, 255, 0, 0.8), 0 0 4px 1px rgba(255, 255, 0, 0.8) inset;
     background-image: radial-gradient(rgba(255, 255, 0, 0.03)), rgba(255, 255, 0, 0.3);
@@ -84,7 +84,7 @@ body{
 
 
 
-#data{
+.data{
     position: absolute;
     left: 40%;
     top: 40%;
