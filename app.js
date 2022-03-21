@@ -11,6 +11,12 @@ let yEnd = playGround.getBoundingClientRect().bottom
 let width = playGround.getBoundingClientRect().width
 let height = playGround.getBoundingClientRect().height
 
+console.log('Dimensioni del playGround:')
+console.log('xStart:' + xStart)
+console.log('xEnd: ' + xEnd)
+console.log('yStart: ' + yStart)
+console.log('yEnd: ' + yEnd )
+
 let punti = document.querySelector('#punti')
 let score = 0
 
@@ -32,6 +38,7 @@ pad.innerHTML =`
 `
 padWidth = width*0.15
 padHeight = height*0.03
+
 
 playGround.append(pad)
 
@@ -106,20 +113,55 @@ addBricks1()
 
 // Creazione ball
 // ----------------------------------------------------------
-let ball = document.createElement('div')
-ball.setAttribute('id', 'ball')
-let ballDiametro = 20
-let ballStart = [(width/2-(ballDiametro/2)), (padHeight*3 + 30)]
-let ballCurrentPosition = ballStart
+//let ball = document.createElement('div')
+//ball.setAttribute('id', 'ball')
+//let ballDiametro = 20
 
-let xDirection = 3
-let yDirection = 3
+//let ballStart = [(width/2-(ballDiametro/2)), (padHeight*3 + 30)]
+//let ballCurrentPosition = ballStart
+let ballDiametro = 1
+let ballD = width*ballDiametro
+
+
+
+console.log('balldiametro: '+ballDiametro)
+let xDirection = 0.5
+let yDirection = 0.5
 let speed = 20
 
-drowBall()
 
 document.addEventListener('click', ballMove)
 
+
+class Ball{
+    constructor(x, y){
+        
+        x = width*(x/100)
+        y = height*(y/100)
+        
+        
+        this.bottomLeft =[x, y]
+        this.bottomRight = [x + ballD, y]
+        this.topLeft = [x, y + ballD]
+        this.topRight = [x + ballD, y + ballD]
+    }
+}
+let ballCurrentPosition = [50-0.3, 10]
+
+function drowBall(){
+    let palla = new Ball(ballCurrentPosition[0], ballCurrentPosition[1])
+    
+    let ball = document.createElement('div')
+    ball.setAttribute('id', 'ball')
+    
+    ball.style.left = palla.bottomLeft[0] + 'px'
+    ball.style.bottom = palla.bottomLeft[1] + 'px'
+    
+    playGround.append(ball)
+}
+
+
+drowBall()
 
 
 
@@ -222,12 +264,12 @@ function movePadMouse(event) {
 
 // Funzioni ball
 // ----------------------------------------------------------
-function drowBall(){
-    ball.style.left = ballCurrentPosition[0] + 'px'
-    ball.style.bottom = (ballCurrentPosition[1] -yDirection*2) + 'px'
+// function drowBall(){
+//     ball.style.left = ballCurrentPosition[0] + 'px'
+//     ball.style.bottom = (ballCurrentPosition[1] -yDirection*2) + 'px'
     
-    playGround.append(ball)
-}
+//     playGround.append(ball)
+// }
 
 function ballMove(){
     document.removeEventListener('click', ballMove)
@@ -263,18 +305,19 @@ function checkCollision(){
     
     
     // Walls collision
-    if(ballCurrentPosition[0]> width-ballDiametro || ballCurrentPosition[0] <= 0){
+    if(ballCurrentPosition[0]> (97) || ballCurrentPosition[0] <= 0){
+        
         changeXDirection()
         //changeDirection()
     }
     // Ceil collision
-    if(ballCurrentPosition[1]>= height - ballDiametro){
+    if(ballCurrentPosition[1]>= 97){
         changeYDirection()
         //changeDirection()
     }
 
     // Pad Collision
-    if((ballCurrentPosition[1] < (padHeight*3 + ballDiametro/4)) && (ballCurrentPosition[1] > (padHeight*2 + ballDiametro/4))){
+    if((ballCurrentPosition[1] < (padHeight*3 )) && (ballCurrentPosition[1] > (padHeight*2 + ballDiametro/4))){
 
         if(
             // Center bounce
@@ -300,6 +343,7 @@ function checkCollision(){
                 //     console.log('left corner')
                 
                 //     if(xDirection>=0){
+
                     //         xDirection += 1
                     //         yDirection += 1
                     
@@ -334,32 +378,32 @@ function checkCollision(){
     
                         
                         // Lost
-                        if(ballCurrentPosition[1] < -yDirection){
+                        if(ballCurrentPosition[1] < 0){
                             clearInterval(timerId)
                         }
 }
 
-//}
-// function changeDirection(){
-//     if(xDirection>0 && yDirection>0){
-//         yDirection = - yDirection
-//         return
-//     }
-//     if(xDirection>0 && yDirection<0){
-//         xDirection = - xDirection
-//         return
-//     }
 
-//     if(xDirection<0 && yDirection<0){
-//         yDirection = - yDirection
-//         return
-//     }
+function changeDirection(){
+    if(xDirection>0 && yDirection>0){
+        yDirection = - yDirection
+        return
+    }
+    if(xDirection>0 && yDirection<0){
+        xDirection = - xDirection
+        return
+    }
 
-//     if(xDirection<0 && yDirection>0){
-//         xDirection = - xDirection
-//         return
-//     }
-// }
+    if(xDirection<0 && yDirection<0){
+        yDirection = - yDirection
+        return
+    }
+
+    if(xDirection<0 && yDirection>0){
+        xDirection = - xDirection
+        return
+    }
+}
 
 function changeXDirection(){
     xDirection = - xDirection
@@ -375,38 +419,151 @@ function changeYDirection(){
 
 // Brick collision
 // ----------------------------------------------------------
+// function checkBrickCollision(){
+    
+    
+    
+//     for(let i=0; i<bricks1.length; i++){
+        
+//         let mattoni = Array.from(document.querySelectorAll('.brick'))
+        
+//         if(((ballCurrentPosition[0]+ballDiametro) > (bricks1[i].bottomLeft[0])
+//             && (ballCurrentPosition[0]) < (bricks1[i].bottomRight[0]))
+            
+//             && (((ballCurrentPosition[1]+ballDiametro+6) > (bricks1[i].bottomLeft[1]))
+//             && ((ballCurrentPosition[1]-6) < bricks1[i].topLeft[1])))
+//             {
+//                 //clearInterval(timerId)
+//                 changeYDirection()
+//                 mattoni[i].remove()
+//                 bricks1.splice(i,1)
+//                 score++
+//                 punti.innerHTML = score
+                
+//             }
+//             //console.log(bricks1)
+//             // if (bricks1.length ==0){
+//             //     clearInterval(timderId)
+//             // }
+//     }
+// }
+let bounce = 0
+// Brick collision 2
+// ----------------------------------------------------------
 function checkBrickCollision(){
     
     
     
-    for(let i=0; i<bricks1.length; i++){
-        
-        let mattoni = Array.from(document.querySelectorAll('.brick'))
-        
-        if(((ballCurrentPosition[0]+ballDiametro) > bricks1[i].bottomLeft[0]
-            && (ballCurrentPosition[0]+ballDiametro) < bricks1[i].bottomRight[0])
+        for(let i=0; i<bricks1.length; i++){
             
-            && (((ballCurrentPosition[1]+ballDiametro) > (bricks1[i].bottomLeft[1]))
-            && (ballCurrentPosition[1] < bricks1[i].topLeft[1])))
-            {
-                clearInterval(timerId)
-                changeYDirection()
-                mattoni[i].remove()
-                bricks1.splice(i,1)
-                score++
-                punti.innerHTML = score
+            let mattoni = Array.from(document.querySelectorAll('.brick'))
+            
+            
+            
+
+
+            if (((ballCurrentPosition[0]+ballDiametro) > (bricks1[i].bottomLeft[0])
+                && (ballCurrentPosition[0]) < (bricks1[i].bottomRight[0]))
                 
-            }
-            //console.log(bricks1)
-            // if (bricks1.length ==0){
-            //     clearInterval(timderId)
-            // }
+                && (((ballCurrentPosition[1]+ballDiametro+6) > (bricks1[i].bottomLeft[1]))
+                && ((ballCurrentPosition[1]-6) < bricks1[i].topLeft[1])))
+                {
+                    // clearInterval(timerId)
+                    // console.log('ball Y position:')
+                    // console.log(ballCurrentPosition[1]+ballDiametro+3)
+                    // console.log('bottom brick: ')
+                    // console.log(bricks1[i].bottomLeft[1])
+                    // console.log('top brick: ')
+                    // console.log(bricks1[i].topLeft[1])
+                    // console.log('ball Y position:')
+                    // console.log(ballCurrentPosition[1]-3)
+
+                    // if((ballCurrentPosition[0]+ballDiametro) > bricks1[i].bottomLeft[0])
+                    // {
+                    //     console.log('hit left')
+                    // }
+                    // if((ballCurrentPosition[0]) < (bricks1[i].bottomRight[0]))
+                    //     {
+                    //     console.log('hit right')
+                    // }
+                    if(
+                    (Math.floor(ballCurrentPosition[1]+ballDiametro+3)) == (Math.floor(bricks1[i].bottomLeft[1])))
+                    {
+                       // console.log('hit bottom')
+                    }
+                    if(Math.floor(bricks1[i].topLeft[1]) ==  Math.floor(ballCurrentPosition[1]-6))
+                    {
+                        console.log('hit top')
+                        clearInterval(timerId)
+                        // console.log('top brick: ')
+                        // console.log(bricks1[i].topLeft[1])
+                        // console.log(Math.floor(bricks1[i].topLeft[1]))
+                        // console.log('ball Y position:')
+                        // console.log(ballCurrentPosition[1]-6)
+                        // console.log(Math.floor(ballCurrentPosition[1]-6))
+
+
+                    }
+                
+                    
+                    changeYDirection()
+                    
+                    bounce++
+                    console.log('Bounce: ' + bounce)
+
+                    
+                    //console.log('Ball-X: '+ (ballCurrentPosition[0]) + ', ' + (ballCurrentPosition[0]+ballDiametro) + '\n\n')
+                    let topBrick = mattoni[i].getBoundingClientRect().y + yStart
+                    let bottomBrick = mattoni[i].getBoundingClientRect().bottom - yStart
+                    console.log('TB: '+ topBrick)
+                    console.log('BB: ' + bottomBrick)
+                    //let yEnd = playGround.getBoundingClientRect().bottom
+
+                    console.log('Top Ball: ' + (ballCurrentPosition[1]+ballDiametro))
+                    //console.table(bricks1[i])
+                    console.log('Bottom Brick: ' + (bricks1[i].bottomLeft[1])+ '\n\n')
+                    
+                    
+                    
+
+
+                    mattoni[i].remove()
+                    bricks1.splice(i,1)
+                    score++
+                    punti.innerHTML = score
+                }
+                //console.log(bricks1)
+                // if (bricks1.length ==0){
+                //     clearInterval(timderId)
+                // }
+        }
     }
-}
 
 
+    let mattoncino = new Brick(10,10)
+    let brickino = document.createElement('div')
+        brickino.classList.add('brick')
+       
+        brickino.style.left = mattoncino.bottomLeft[0] + 'px'
+        brickino.style.bottom = mattoncino.bottomLeft[1] + 'px'
+
+        playGround.append(brickino)
+
+        let brickinoStart = brickino.getBoundingClientRect().x - xStart
+        let brickinoEnd = brickino.getBoundingClientRect().x - xStart + brickWidth
+
+        let topBrickino = brickino.getBoundingClientRect().y 
+        let bottomBrickino = brickino.getBoundingClientRect().bottom 
+
+        console.log(brickinoStart, brickinoEnd)
+        console.log(topBrickino, bottomBrickino)
+        console.log(bottomBrickino - topBrickino)
+        console.log(brickHeight)
+        
+        console.table(mattoncino)
 
 
+        
 
 
 
