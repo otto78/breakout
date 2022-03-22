@@ -1,77 +1,51 @@
+import {board, DOMboard} from './modules/box.js'
+import {Pad, DOMpad} from './modules/pad.js'
+
+
 // Variabili globali
 // ----------------------------------------------------------
-let playGround = document.querySelector('#playGround')
-let command = document.querySelector('#command')
-
-// PlayGround dimensions
-let xStart = playGround.getBoundingClientRect().x
-let xEnd = playGround.getBoundingClientRect().right
-let yStart = playGround.getBoundingClientRect().y
-let yEnd = playGround.getBoundingClientRect().bottom
-let width = playGround.getBoundingClientRect().width
-let height = playGround.getBoundingClientRect().height
-
-console.log('Dimensioni del playGround:')
-console.log('xStart:' + xStart)
-console.log('xEnd: ' + xEnd)
-console.log('yStart: ' + yStart)
-console.log('yEnd: ' + yEnd )
 
 let punti = document.querySelector('#punti')
 let score = 0
-
-let timderId
-//console.log('Width: ' + width)
-//console.log('xStart: '+xStart)
+let timerId
 
 
+// Board
+// ----------------------------------------------------------
 
+console.log('Dimensioni del board:')
+console.table(board)
 
 
 // Creazione pad
 // ----------------------------------------------------------
-let pad = document.createElement('div')
-pad.classList.add('pad', 'd-flex', 'justify-content-between')
-pad.innerHTML =`
-<div class="corner"></div>
-<div class="corner"></div>
-`
-padWidth = width*0.15
-padHeight = height*0.03
 
+let padPosition = board.width/2
+DOMboard.append(DOMpad)
+let pad = new Pad(DOMpad)
+pad.display(padPosition)
 
-playGround.append(pad)
-
-
-
-
-//console.log('pad: '+padWidth)
-
-pad.style.bottom = ((padHeight*2) +'px')
-//pad.style.top = ((height-padHeight*3) +'px')
-let padPosition = width/2
-pad.style.left = padPosition +'px'
+console.log('Dimensioni e posizione del pad')
+console.table(pad)
 
 document.addEventListener('keydown', movePadKey)
-playGround.addEventListener('mousemove', movePadMouse);
+//DOMboard.addEventListener('mousemove', pad.movePadMouse);
 //command.addEventListener('pointerdown',  movePadCommand)
-
-
 
 
 
 // Creazione Brick
 // ----------------------------------------------------------
-brickWidth = width*0.10
-brickHeight = height*0.05
+let brickWidth = board.width*0.10
+let brickHeight = board.height*0.05
 
 
 
 class Brick{
     constructor(x, y){
 
-        x = width*(x/100)
-        y = height*(y/100)
+        x = board.width*(x/100)
+        y = board.height*(y/100)
 
         this.bottomLeft =[x, y]
         this.bottomRight = [x + brickWidth, y]
@@ -85,8 +59,8 @@ let bricks1 = []
 
 for(let j=0; j<5; j++){
     for(let i=0; i<8; i++){
-        x = 10 + i*10
-        y = 65 + (j/2)*10
+        let x = 10 + i*10
+        let y = 65 + (j/2)*10
         bricks1.push(new Brick(x,y))
     }
 }
@@ -96,12 +70,12 @@ for(let j=0; j<5; j++){
 function addBricks1(){
     for(let i=0; i<bricks1.length; i++){
         let brick = document.createElement('div')
-        brick.classList.add('brick')
+        brick.classList.add('brick', 'neon-border')
        
         brick.style.left = bricks1[i].bottomLeft[0] + 'px'
         brick.style.bottom = bricks1[i].bottomLeft[1] + 'px'
         
-        playGround.append(brick)
+        DOMboard.append(brick)
         
     }
 }
@@ -120,24 +94,24 @@ addBricks1()
 //let ballStart = [(width/2-(ballDiametro/2)), (padHeight*3 + 30)]
 //let ballCurrentPosition = ballStart
 let ballDiametro = 1
-let ballD = width*ballDiametro
+let ballD = board.width*ballDiametro
 
 
 
-console.log('balldiametro: '+ballDiametro)
+
 let xDirection = 0.5
 let yDirection = 0.5
 let speed = 20
 
 
-document.addEventListener('click', ballMove)
+//document.addEventListener('click', ballMove)
 
 
 class Ball{
     constructor(x, y){
         
-        x = width*(x/100)
-        y = height*(y/100)
+        x = board.width*(x/100)
+        y = board.height*(y/100)
         
         
         this.bottomLeft =[x, y]
@@ -157,11 +131,11 @@ function drowBall(){
     ball.style.left = palla.bottomLeft[0] + 'px'
     ball.style.bottom = palla.bottomLeft[1] + 'px'
     
-    playGround.append(ball)
+    DOMboard.append(ball)
 }
 
 
-drowBall()
+//drowBall()
 
 
 
@@ -169,48 +143,55 @@ drowBall()
 // Funzioni Pad
 // ----------------------------------------------------------
 
-function drowPad(){
-    
-    playGround.append(pad)
-    pad.style.left = padPosition +'px'
-}
 
 function movePadKey(event){
-    if(event.key == 'ArrowLeft' && padPosition > 0){   
-         
+
+    
+        data.innerHTML = `
+        <div>pad position ${padPosition}</div>
+        `
+   
+    if(event.key == 'ArrowLeft' && padPosition > 0){         
         padPosition = padPosition - 50
-        if(padPosition < padWidth/2) {padPosition = padWidth/2}
+
+        if(padPosition < pad.width/2) {padPosition = pad.width/2}
         
         pad.remove()
-        drowPad()
+        pad.display(padPosition)
     }
     
-    if(event.key == 'ArrowRight' && padPosition < width - padWidth/2){    
-        
-        padPosition = padPosition + 50      
-        if(padPosition > width - padWidth/2) {padPosition = width - padWidth/2} 
-        
+    if(event.key == 'ArrowRight' && padPosition < board.width - pad.width/2){      
+        padPosition = padPosition + 50    
+
+        if(padPosition > board.width - pad.width/2) {padPosition = board.width - pad.width/2} 
+
         pad.remove()
-        drowPad()
+        pad.display(padPosition)
     }
 
 
 }
 
 function movePadMouse(event) {
-    let pointer = event.clientX - xStart;
+    let pointer = event.clientX - board.left;
+
+    // data.innerHTML = `
+    // <div>Mouse x: ${event.clientX - board.left}</div>
+    // <div>Mouse y: ${event.clientY - board.top}</div>
+    // <div>pad width: ${pad.width}</div>
+    // <div>pad left: ${padPosition - pad.width/2}</div>
+    // <div>pad right: ${padPosition + pad.width/2}</div>
+    // `
     
-    if (pointer < padWidth/2){
-        pad.style.left = (padWidth/2  + 'px');
-    } else if(pointer > width-padWidth/2){
-        pad.style.left = (width-padWidth/2  + 'px');
+    if (pointer < pad.width/2){
+        pad.left = (board.left + pad.width  + 'px');
+    } else if(pointer > board.width-pad.width/2){
+        pad.left = (board.width-pad.width/2  + 'px');
     }else{
         padPosition = pointer;
+       
         pad.remove()
-        drowPad()
-        //console.log(Math.floor(padPosition - padWidth/2), Math.floor(padPosition + padWidth/2))
-        
-        
+        pad.display(padPosition)   
     }      
 }
 
@@ -268,7 +249,7 @@ function movePadMouse(event) {
 //     ball.style.left = ballCurrentPosition[0] + 'px'
 //     ball.style.bottom = (ballCurrentPosition[1] -yDirection*2) + 'px'
     
-//     playGround.append(ball)
+//     board.append(ball)
 // }
 
 function ballMove(){
@@ -290,13 +271,14 @@ function ballMove(){
 
 let data = document.createElement('div')
 data.classList.add('data')
-playGround.append(data)
+DOMboard.append(data)
 
 
 function checkCollision(){
 
      
     data.innerHTML = `
+    <div>witdt: ${board.width}</div>
     <div>Px: ${ballCurrentPosition[0]}</div>
     <div>Py: ${Math.floor(ballCurrentPosition[1])}</div>
     <div>x: ${xDirection}</div>
@@ -305,8 +287,8 @@ function checkCollision(){
     
     
     // Walls collision
-    if(ballCurrentPosition[0]> (97) || ballCurrentPosition[0] <= 0){
-        
+    if(ballCurrentPosition[0]> 97 || ballCurrentPosition[0] <= 0){
+        clearInterval(timerId)
         changeXDirection()
         //changeDirection()
     }
@@ -517,7 +499,7 @@ function checkBrickCollision(){
                     let bottomBrick = mattoni[i].getBoundingClientRect().bottom - yStart
                     console.log('TB: '+ topBrick)
                     console.log('BB: ' + bottomBrick)
-                    //let yEnd = playGround.getBoundingClientRect().bottom
+                    //let yEnd = board.getBoundingClientRect().bottom
 
                     console.log('Top Ball: ' + (ballCurrentPosition[1]+ballDiametro))
                     //console.table(bricks1[i])
@@ -540,27 +522,7 @@ function checkBrickCollision(){
     }
 
 
-    let mattoncino = new Brick(10,10)
-    let brickino = document.createElement('div')
-        brickino.classList.add('brick')
-       
-        brickino.style.left = mattoncino.bottomLeft[0] + 'px'
-        brickino.style.bottom = mattoncino.bottomLeft[1] + 'px'
-
-        playGround.append(brickino)
-
-        let brickinoStart = brickino.getBoundingClientRect().x - xStart
-        let brickinoEnd = brickino.getBoundingClientRect().x - xStart + brickWidth
-
-        let topBrickino = brickino.getBoundingClientRect().y 
-        let bottomBrickino = brickino.getBoundingClientRect().bottom 
-
-        console.log(brickinoStart, brickinoEnd)
-        console.log(topBrickino, bottomBrickino)
-        console.log(bottomBrickino - topBrickino)
-        console.log(brickHeight)
-        
-        console.table(mattoncino)
+    
 
 
         

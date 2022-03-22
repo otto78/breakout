@@ -1,19 +1,18 @@
 /* Stile del playGround */
 
-body{
+.bg-stars{
     background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url(./media/bg-stars.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;   
 }
 
-.board{
-    height: 80vh;
-    border: 2px solid rgba(0, 128, 0, 0.8);
+.neon-border{
+    border: 1px solid rgba(0, 128, 0, 0.8);
     border-radius: 5px;
-    box-shadow: 0 0 4px 1px rgba(0, 128, 0, 0.8), 0 0 4px 1px rgba(0, 128, 0, 0.8) inset;
-    backdrop-filter: blur(2px);
+    box-shadow: 0 0 4px 1px rgba(0, 128, 0, 0.8), 0 0 4px 1px rgba(0, 128, 0, 0.8) inset;    
 }
+
 
 #tabellone{
     height: 6vh;
@@ -22,10 +21,10 @@ body{
     background-color: rgba(0, 128, 0, 0.1);   
 }
 
-#playGround{
+#board{
     height: 74vh;
     position: relative;
-    /* border: 2px solid rgba(128, 0, 0, 0.8); */
+    backdrop-filter: blur(2px);
 }
 
 #tabellone p{
@@ -34,26 +33,24 @@ body{
 
 #command{
     position:absolute;
+    bottom: 20px;
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 1px solid rgba(0, 128, 0, 0.8);
-    box-shadow: 0 0 4px 1px rgba(0, 128, 0, 0.8), 0 0 4px 1px rgba(0, 128, 0, 0.8) inset;
-    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+    
 }
 
 /* Stile del pad */
 
 .pad{
     position: absolute;
+    bottom: 20px;
     height: 3%;
     width: 15%;
-    
     transform: translateX(-50%);
-    border: 1px solid rgba(0, 128, 0, 0.8);
-    border-radius: 5px;
-    box-shadow: 0 0 2px 1px rgba(0, 128, 0, 0.8), 0 0 2px 1px rgba(0, 128, 0, 0.8) inset;
+
     background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+
 }
 
 .corner{
@@ -82,27 +79,24 @@ body{
 }
 
 
-
-
-.data{
-    position: absolute;
-    left: 40%;
-    top: 40%;
-    font-size: 2rem;
-    color: rgba(255, 255, 255, 0.231);
-}
-
 /* Stile dei brick */
 
 .brick{
-
+    
     position: absolute;
     height: 5%;
     width: 10%;
     
-   
-    border: 1px solid rgba(0, 128, 0, 0.8);
-    border-radius: 5px;
-    box-shadow: 0 0 2px 1px rgba(0, 128, 0, 0.8), 0 0 2px 1px rgba(0, 128, 0, 0.8) inset;
     background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+}
+
+
+
+/* Data display for debug*/
+.data{
+    position: absolute;
+    left: 40%;
+    top: 40%;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.231);
 }

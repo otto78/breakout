@@ -1,13 +1,12 @@
 @media screen and (max-width: 768px){
 
-.board{
-        height: 70vh;
-    }
+    
+
     #tabellone{
         height: 9vh;
     }
 
-    #playGround{
+    #board{
         height: 61vh;
     }
     #command{
