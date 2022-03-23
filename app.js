@@ -1,5 +1,5 @@
-import {board, DOMboard} from './modules/box.js'
-import {Pad, DOMpad} from './modules/pad.js'
+import {board, domBoard} from './modules/box.js'
+import {Pad} from './modules/pad.js'
 
 
 // Variabili globali
@@ -20,16 +20,21 @@ console.table(board)
 // Creazione pad
 // ----------------------------------------------------------
 
-let padPosition = board.width/2
-DOMboard.append(DOMpad)
-let pad = new Pad(DOMpad)
-pad.display(padPosition)
+//domBoard.append(domPad)
+let pad = new Pad()
+let padPosition = board.width/2 - pad.width/2
 
-console.log('Dimensioni e posizione del pad')
+
+
+pad.display(padPosition)
+console.log('Dimensioni e posizione ATTUALE del pad')
 console.table(pad)
 
+
+
+
 document.addEventListener('keydown', movePadKey)
-//DOMboard.addEventListener('mousemove', pad.movePadMouse);
+domBoard.addEventListener('mousemove', movePadMouse);
 //command.addEventListener('pointerdown',  movePadCommand)
 
 
@@ -75,7 +80,7 @@ function addBricks1(){
         brick.style.left = bricks1[i].bottomLeft[0] + 'px'
         brick.style.bottom = bricks1[i].bottomLeft[1] + 'px'
         
-        DOMboard.append(brick)
+        domBoard.append(brick)
         
     }
 }
@@ -131,7 +136,7 @@ function drowBall(){
     ball.style.left = palla.bottomLeft[0] + 'px'
     ball.style.bottom = palla.bottomLeft[1] + 'px'
     
-    DOMboard.append(ball)
+    domBoard.append(ball)
 }
 
 
@@ -145,12 +150,7 @@ function drowBall(){
 
 
 function movePadKey(event){
-
-    
-        data.innerHTML = `
-        <div>pad position ${padPosition}</div>
-        `
-   
+  
     if(event.key == 'ArrowLeft' && padPosition > 0){         
         padPosition = padPosition - 50
 
@@ -165,33 +165,30 @@ function movePadKey(event){
 
         if(padPosition > board.width - pad.width/2) {padPosition = board.width - pad.width/2} 
 
-        pad.remove()
-        pad.display(padPosition)
+        pad.move(padPosition)
+               
     }
-
-
 }
 
 function movePadMouse(event) {
     let pointer = event.clientX - board.left;
 
-    // data.innerHTML = `
-    // <div>Mouse x: ${event.clientX - board.left}</div>
-    // <div>Mouse y: ${event.clientY - board.top}</div>
-    // <div>pad width: ${pad.width}</div>
-    // <div>pad left: ${padPosition - pad.width/2}</div>
-    // <div>pad right: ${padPosition + pad.width/2}</div>
-    // `
+    data.innerHTML = `
+    <div>Mouse x: ${event.clientX - board.left}</div>
+    <div>Mouse y: ${event.clientY - board.top}</div>
+    <div>pad width: ${pad.width}</div>
+    <div>pad left: ${pad.left}</div>
+    <div>pad right: ${pad.right}</div>
+    `
     
     if (pointer < pad.width/2){
-        pad.left = (board.left + pad.width  + 'px');
+        pad.left = 0
     } else if(pointer > board.width-pad.width/2){
-        pad.left = (board.width-pad.width/2  + 'px');
+        pad.left = (board.width-pad.width/2)
     }else{
-        padPosition = pointer;
-       
-        pad.remove()
-        pad.display(padPosition)   
+        padPosition = pointer - pad.width/2;
+        pad.move(padPosition)
+        
     }      
 }
 
@@ -271,7 +268,7 @@ function ballMove(){
 
 let data = document.createElement('div')
 data.classList.add('data')
-DOMboard.append(data)
+domBoard.append(data)
 
 
 function checkCollision(){

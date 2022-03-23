@@ -11,7 +11,7 @@ class Box{
     }
 }
 
-let DOMboard = document.querySelector('#board')
-let board = new Box(DOMboard)
+let domBoard = document.querySelector('#board')
+let board = new Box(domBoard)
 
-export{Box, board, DOMboard}
+export{Box, board, domBoard}
