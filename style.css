@@ -21,14 +21,14 @@
     background-color: rgba(0, 128, 0, 0.1);   
 }
 
+#tabellone p{
+    margin: 5px 0 5px 0;   
+}
+
 #board{
     height: 74vh;
     position: relative;
     backdrop-filter: blur(2px);
-}
-
-#tabellone p{
-    margin: 5px 0 5px 0;   
 }
 
 #command{
@@ -93,7 +93,7 @@
 
 
 /* Data display for debug*/
-.data{
+#data{
     position: absolute;
     left: 40%;
     top: 40%;

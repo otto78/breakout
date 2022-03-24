@@ -1,17 +1,17 @@
 
-import {board, domBoard} from './box.js'
+import {board, domBoard} from './board.js'
 
 
 class Pad{
     
-    constructor(x = board.width/2){
+    constructor(x = 0){
     
         this.width = board.width*0.15
         this.height = board.height*0.03
     
-        this.left = x
-        this.right = this.left + this.width
-        this.top = 30 + this.height
+        this.left = x 
+        this.right = x + this.width
+        this.top = this.height*2
         this.bottom = this.height
     }
     
@@ -24,11 +24,11 @@ class Pad{
         <div class="corner"></div>
         `
         
-        this.left = x
-        this.right = this.left + this.width
+        this.left = x 
+        this.right = x + this.width
         
-        domPad.style.left = (this.left + this.width/2) + 'px'
-        domPad.style.bottom = this.height + 'px'   
+        domPad.style.left = (this.left + this.width/2 ) + 'px'
+        domPad.style.bottom = this.bottom + 'px'   
         domBoard.append(domPad)
     }
 
