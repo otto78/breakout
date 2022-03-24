@@ -15,8 +15,8 @@ class Ball{
         this.bottom = y
 
         //this.position = [x, y]
-        this.direction = [3, 3]
-        this.speed = 20
+        this.direction = [2, 2]
+        this.speed = 10
 
 
     }
@@ -51,7 +51,6 @@ class Ball{
             this.right = x + this.diam
             this.top = y + this.diam
             this.bottom = y
-            //this.position = [x, y]
             this.display(x,y)
     
         
