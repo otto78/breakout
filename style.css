@@ -37,6 +37,8 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
+
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
     
 }
 

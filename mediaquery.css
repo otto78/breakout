@@ -1,7 +1,5 @@
 @media screen and (max-width: 768px){
 
-    
-
     #tabellone{
         height: 9vh;
     }
@@ -21,7 +19,12 @@
 
 
 
-@media screen and (max-width: 576px){}
+@media screen and (max-width: 576px){
+
+   .pad{
+    width: 20%;
+   }
+}
 
 
 

@@ -5,7 +5,9 @@ import {board, domBoard} from './board.js'
 class Pad{
     
     constructor(x = 0){
-    
+        if(board.width<576){
+            this.width = board.width*0.20
+        }
         this.width = board.width*0.15
         this.height = board.height*0.03
     
@@ -19,10 +21,10 @@ class Pad{
         let domPad = document.createElement('div')
         domPad.classList.add('pad', 'd-flex', 'justify-content-between', 'neon-border')
         
-        domPad.innerHTML =`
-        <div class="corner"></div>
-        <div class="corner"></div>
-        `
+        // domPad.innerHTML =`
+        // <div class="corner"></div>
+        // <div class="corner"></div>
+        // `
         
         this.left = x 
         this.right = x + this.width

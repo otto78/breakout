@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="oggettoMobile" style="background-color:#ad2624; width:100px; height:100px; border-radius:50px; position:relative;"></div>
+
+
+    <script>
+        var cursore;
+        var offset = [0,0];
+        var ogg;
+        var click = false;
+        ogg = document.getElementById("oggettoMobile");
+        document.body.appendChild(ogg);
+        ogg.addEventListener('pointerdown', function(e) {
+          click = true;
+          offset = [
+            ogg.offsetLeft - e.clientX,
+            ogg.offsetTop - e.clientY
+          ];
+        }, true);
+        document.addEventListener('pointerup', function() {
+          click = false;
+        }, true);
+        document.addEventListener('pointermove', function(event) {
+          event.preventDefault();
+          if (click) {
+            cursore = {
+              x : event.clientX,
+              y : event.clientY
+            };
+            ogg.style.left = (cursore.x + offset[0]) + 'px';
+            ogg.style.top  = (cursore.y + offset[1]) + 'px';
+          }
+        }, true);
+      </script>
+</body>
+</html>

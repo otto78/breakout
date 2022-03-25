@@ -16,8 +16,11 @@ class Ball{
 
         //this.position = [x, y]
         this.direction = [2, 2]
-        this.speed = 10
-
+        if(board.width<576){
+            this.speed = 15
+        }else{
+            this.speed = 10
+        }
 
     }
 

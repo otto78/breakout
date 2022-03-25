@@ -6,33 +6,26 @@ import{Ball} from './modules/ball.js'
 
 // Variabili globali
 // ----------------------------------------------------------
-
+let command = document.querySelector('#command')
 let punti = document.querySelector('#punti')
 let score = 0
 let timerId
 
-
-// Board
-// ----------------------------------------------------------
-
-// console.log('Dimensioni del board:')
-//console.table(board)
-
-
+console.log(board.width)
 // Creazione pad
 // ----------------------------------------------------------
 
 let pad = new Pad()
-
 let padPosition = board.width/2 - pad.width/2
-//padPosition = 0
 pad.display(padPosition)
-//console.table(pad)
 
-document.addEventListener('keydown', movePadKey)
+document.addEventListener('keydown', movePadKey);
 domBoard.addEventListener('mousemove', movePadMouse);
-//command.addEventListener('pointerdown',  movePadCommand)
 
+document.addEventListener('touchstart', handleTouchEvent, true);
+document.addEventListener('touchmove', handleTouchEvent, true);
+document.addEventListener('touchend', handleTouchEvent, true);
+document.addEventListener('touchcancel', handleTouchEvent, true);
 
 function movePadKey(event){
   
@@ -75,6 +68,16 @@ function movePadMouse(event) {
     }      
 }
 
+function handleTouchEvent(e) {
+    let commandWidth = command.getBoundingClientRect().width
+
+    if (e.touches.length === 0 ) return;
+    //e.preventDefault();
+    e.stopPropagation();
+    var touch = e.touches[0];
+    command.style.left = (touch.pageX - commandWidth / 2) + 'px';
+    pad.move(touch.pageX - (3/4)*pad.width)
+}
 
 // Creazione Brick
 // ----------------------------------------------------------
@@ -95,6 +98,8 @@ function addBricks1(){
     for(let i=0; i<bricks1.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
+        
+       
        
         brick.style.left = bricks1[i].left + 'px'
         brick.style.bottom = bricks1[i].bottom + 'px'
@@ -107,14 +112,12 @@ function addBricks1(){
 addBricks1()
 
 
-
 // Creazione ball
 // ----------------------------------------------------------
 
 let ball = new Ball(0,0)
-
 ball.display((board.width/2-ball.diam/2), pad.top)
-document.addEventListener('click', ballMove)
+domBoard.addEventListener('click', ballMove)
 
 let pastArrX =[]
 let pastArrY = []
@@ -138,55 +141,6 @@ function ballMove(){
         pastArrY.push(ball.bottom)
     }
 }
-
-
-// Funzioni Pad da sistemare
-// ----------------------------------------------------------
-// function movePadCommand(){
-       
-//     let click = true;
-//     command.style.borderColor= "Red"
-      
-//     document.addEventListener('pointerup', function() {
-//         command.style.borderColor = "Green"
-//         click = false;
-//     });
-    
-//     document.addEventListener('pointermove', function(event) {
-        
-//         let finger = event.clientX;
-//         let commandWidth = command.getBoundingClientRect().width
-      
-//         //if (click) {
-        
-//         if (finger < padWidth/2) {
-//             command.style.left = (-width/2+commandWidth/2) + 'px';
-//             pad.style.left = (padWidth/2  + 'px');
-    
-//         } else if(finger > width-padWidth/2) {
-//             command.style.left = (width/2-commandWidth/2) + 'px';
-//             pad.style.left = (width-padWidth/2  + 'px');
-    
-//         } else {
-//             command.style.left = (finger-width/2) + 'px';
-//             pad.style.left = (finger  + 'px');
-//         }     
-       
-//         //}
-//     })
-// }
-
-// command.addEventListener('pointermove', function(event) {
-//     event.preventDefault()   
-//     let finger = event.clientX;
-    
-//     console.log(Math.floor(finger))
-    
-    
-    
-// })
-
-
 
 
 // Collisions
@@ -222,12 +176,16 @@ function checkCollision(){
             // Center bounce
             (ball.left >= (pad.left)) && (ball.right <= pad.right)){
             
-            
+            //clearInterval(timerId)
             changeYDirection()
+            //console.log('pad bounce')
+            //console.table(ball)
             //changeDirection()
             
         } 
     }
+
+    
     //     // Pad Left corner bounce
         
     //     // if (
@@ -284,48 +242,13 @@ function checkCollision(){
     }
 }
 
-// function changeDirection(){
-//     if(xDirection>0 && yDirection>0){
-//         yDirection = - yDirection
-//         return
-//     }
-//     if(xDirection>0 && yDirection<0){
-//         xDirection = - xDirection
-//         return
-//     }
-
-//     if(xDirection<0 && yDirection<0){
-//         yDirection = - yDirection
-//         return
-//     }
-
-//     if(xDirection<0 && yDirection>0){
-//         xDirection = - xDirection
-//         return
-//     }
-// }
-
-function changeXDirection(){
-    ball.direction[0] = - ball.direction[0]
-}
-
-function changeYDirection(){
-    ball.direction[1] = - ball.direction[1]
-}
-
-
-
-
-
-// Brick collision
-// ----------------------------------------------------------
 function checkBrickCollision(){
-        let lastX = pastArrX[pastArrX.length-2]
-        let lastY = pastArrY[pastArrY.length-2]
-        
+    let lastX = pastArrX[pastArrX.length-2]
+    let lastY = pastArrY[pastArrY.length-2]
+    
     for(let i=0; i<bricks1.length; i++){       
-        let mattoni = Array.from(document.querySelectorAll('.brick'))
         
+        let mattoni = Array.from(document.querySelectorAll('.brick'))
         if((ball.right >= (bricks1[i].left)
             && ball.left <= (bricks1[i].right))
             
@@ -340,31 +263,40 @@ function checkBrickCollision(){
                 else if(((lastX+ball.diam) < bricks1[i].left) || lastX>bricks1[i].right){
                     changeXDirection()
                 }
-            
+
                 pastArrX=[]
                 pastArrY=[]
         
                 mattoni[i].remove()
                
-                console.log(bricks1.length)
+                //console.log(bricks1.length)
                 bricks1.splice(i,1)
                 score++
                 punti.innerHTML = score
+
                 if(bricks1.length == 0){
                     clearInterval(timerId)
-                    ball.remove()
+                    let hide = document.querySelector('#ball').remove()
+                    
+                    
                     console.log('hai vinto!')
                 }
                 
             }
-            //console.log(bricks1)
+            //console.log(bricks1.length)
             // if (bricks1.length ==0){
             //     clearInterval(timderId)
             // }
     }
 }
 
+function changeXDirection(){
+    ball.direction[0] = - ball.direction[0]
+}
 
+function changeYDirection(){
+    ball.direction[1] = - ball.direction[1]
+}
 
 
 
