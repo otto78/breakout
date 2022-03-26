@@ -18,14 +18,12 @@ let lives = 3
 let score = 0
 let level = 1
 
-// game time
-// Variabili Gestione timer
+// Game timer
 
 let sec = 0
 let min = 0
 let t
 
-//Funzioni timer
 function tick(){
     sec++
     if(sec>=60){
@@ -120,18 +118,9 @@ function handleTouchEvent(e) {
 // level 1
 let bricks1 = []
 
-// for(let j=0; j<5; j++){
-//     for(let i=0; i<8; i++){
-        
-//         let x = 10 + i*10
-//         let y = 65 + j*5
-//         bricks1.push(new Brick(x,y))
-//     }
-// }
-
 function addBricks1(){
 
-    for(let j=0; j<5; j++){
+    for(let j=0; j<1; j++){
         for(let i=0; i<8; i++){
             
             let x = 10 + i*10
@@ -140,14 +129,10 @@ function addBricks1(){
         }
     }
 
-
-
     for(let i=0; i<bricks1.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
-        
-       
-       
+              
         brick.style.left = bricks1[i].left + 'px'
         brick.style.bottom = bricks1[i].bottom + 'px'
         
@@ -170,13 +155,16 @@ let timerId
 let pastArrX =[]
 let pastArrY = []
 
-
 function ballMove(){
     document.removeEventListener('click', ballMove)
+    ball.direction[1] = 2
+
     timerId = setInterval(move, ball.speed)
     timer()
+    console.log('al Click')
+    console.log('speed: '+ ball.speed)
     
-
+    
     function move(){
 
         checkCollision()
@@ -201,9 +189,19 @@ let modalBody = document.querySelector('#modalBody')
 let modalBtn = document.querySelector('#modalBtn')
 
 
-function rePlay(){
+function play(){
+    modalBtn.removeEventListener('click', play)
     closeModal()
-    
+    restart()
+    domBoard.addEventListener('click', ballMove)
+}
+
+function rePlay(){
+    modalBtn.removeEventListener('click', rePlay)
+    closeModal()
+    restart()
+
+    ball.speed = 10
     level = 1
     score = 0
     lives = 3
@@ -226,6 +224,34 @@ function rePlay(){
     addBricks1()
   
     domBoard.addEventListener('click', ballMove)
+}
+
+function nextLevel(){
+    modalBtn.removeEventListener('click', nextLevel)
+    closeModal()
+    restart()
+
+    ball.speed = ball.speed - 2
+
+    let mattoni = Array.from(document.querySelectorAll('.brick'))
+    for(let i=0; i<mattoni.length; i++){
+        mattoni[i].remove()
+    }
+    mattoni = []
+    bricks1 = []
+    
+    addBricks1()
+  
+    domBoard.addEventListener('click', ballMove)
+}
+
+function restart(){
+    pad.remove()
+    pad.display(board.width/2 - pad.width/2)
+    
+    ball.remove()
+    ball.direction[1] = - ball.direction[1]
+    ball.display((board.width/2-ball.diam/2), pad.top)
 }
 
 function openModal() {
@@ -281,22 +307,19 @@ function checkCollision(){
     // Ceil collision
     if(ball.top >= board.top){
         changeYDirection()
-        //changeDirection()
+       
     }
 
     //Pad Collision
-
     let lastX = pastArrX[pastArrX.length-2]
     let lastY = pastArrY[pastArrY.length-2]
-    
-       
+      
         if((ball.right >= (pad.left)
             && ball.left <= (pad.right))
             
             && ((ball.bottom <= (pad.top))
             && (ball.top >= (pad.bottom))))
             {
-
                 if(((lastY+ball.diam)< pad.bottom) || lastY > pad.top){
                     changeYDirection()
                 }
@@ -304,7 +327,6 @@ function checkCollision(){
                 else if(((lastX+ball.diam) < pad.left) || lastX>pad.right){
                     changeXDirection()
                 }
-
             }
     
     // Pad Left corner bounce
@@ -358,39 +380,42 @@ function checkCollision(){
     // Lost
     if(ball.bottom < 0){
         lives--
+        vite.innerHTML = `${lives}`
+        console.log(lives)
+        
         clearInterval(timerId)
         clearInterval(t)
         
-        vite.innerHTML = `${lives}`
+        if(lives >=2){
+            openModal()
+            modalTitle.innerHTML = "Ahi ahi ahi!!"
+            modalBody.innerHTML = "Ti restano ancora due vite!!"
+            modalBtn.innerHTML = "Continua"
 
+            modalBtn.addEventListener('click', play)
+               
+        }else if(lives ==1){
+            openModal()
+            modalTitle.innerHTML = "Ahi ahi ahi!!"
+            modalBody.innerHTML = "Ti resta ancora una vita!!"
+            modalBtn.innerHTML = "Continua"
 
+            modalBtn.addEventListener('click', play)
+            
+        }else if (lives == 0) {        
+            openModal()
+            modalTitle.innerHTML = "Hai perso!!"
+            modalBody.innerHTML = "Vuoi giocare ancora?"
+            modalBtn.innerHTML = "Sì"
+
+            modalBtn.addEventListener('click', rePlay)             
+            
+        }
         
-
-            if(lives ==2){
-                openModal()
-                modalTitle.innerHTML = "Ahi ahi ahi!!"
-                modalBody.innerHTML = "Ti restano ancora due vite!!"
-                modalBtn.innerHTML = "Continua"
-                modalBtn.addEventListener('click', closeModal)
-                restart()
-            }else if(lives ==1){
-                openModal()
-                modalTitle.innerHTML = "Ahi ahi ahi!!"
-                modalBody.innerHTML = "Ti resta ancora una vita!!"
-                modalBtn.innerHTML = "Continua"
-                modalBtn.addEventListener('click', closeModal)
-                restart()
-            }else if (lives == 0) {        
-                openModal()
-                modalTitle.innerHTML = "Hai perso!!"
-                modalBody.innerHTML = "Vuoi giocare ancora?"
-                modalBtn.innerHTML = "Sì"
-                modalBtn.addEventListener('click', rePlay)
-                
-                restart()
-                domBoard.removeEventListener('click', ballMove)
-            }
         
+        
+        console.log('al Floor')
+        console.log('speed: '+ ball.speed)
         
     }
 }
@@ -422,24 +447,33 @@ function checkBrickCollision(){
         
                 mattoni[i].remove()
                
-                //console.log(bricks1.length)
+                
                 bricks1.splice(i,1)
                 score++
                 punti.innerHTML = score
 
                 if(bricks1.length == 0){
                     clearInterval(timerId)
-                    let hide = document.querySelector('#ball').remove()
+                    clearInterval(t)
+                    level++
+                    livello.innerHTML = `${level}`
+                   
+                    openModal()
+                    modalTitle.innerHTML = "Hai vinto!!"
+                    modalBody.innerHTML = "Next Level?"
+                    modalBtn.innerHTML = "Ovvio"
+
+                    modalBtn.addEventListener('click', nextLevel)             
+                    
+                    console.log('a Brick == 0')
+                    console.log('speed: '+ ball.speed)
                     
                     
-                    console.log('hai vinto!')
+                    
                 }
                 
             }
-            //console.log(bricks1.length)
-            // if (bricks1.length ==0){
-            //     clearInterval(timderId)
-            // }
+            
     }
 }
 
@@ -451,19 +485,10 @@ function changeYDirection(){
     ball.direction[1] = - ball.direction[1]
 }
 
-function restart(){
-    pad.remove()
-    pad.display(board.width/2 - pad.width/2)
-    
-    ball.remove()
-    ball.direction[1] = - ball.direction[1]
-    ball.display((board.width/2-ball.diam/2), pad.top)
-}
 
 
 
-//vite.innerHTML = `${lives}`
-//livello.innerHTML = `${level}`
+
 
         
 
