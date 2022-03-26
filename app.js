@@ -120,16 +120,28 @@ function handleTouchEvent(e) {
 // level 1
 let bricks1 = []
 
-for(let j=0; j<5; j++){
-    for(let i=0; i<8; i++){
+// for(let j=0; j<5; j++){
+//     for(let i=0; i<8; i++){
         
-        let x = 10 + i*10
-        let y = 65 + j*5
-        bricks1.push(new Brick(x,y))
-    }
-}
+//         let x = 10 + i*10
+//         let y = 65 + j*5
+//         bricks1.push(new Brick(x,y))
+//     }
+// }
 
 function addBricks1(){
+
+    for(let j=0; j<5; j++){
+        for(let i=0; i<8; i++){
+            
+            let x = 10 + i*10
+            let y = 65 + j*5
+            bricks1.push(new Brick(x,y))
+        }
+    }
+
+
+
     for(let i=0; i<bricks1.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
@@ -180,6 +192,71 @@ function ballMove(){
     }
 }
 
+// Modal functions and conditions
+// ----------------------------------------------------------
+
+let modal = document.querySelector('#modal')
+let modalTitle = document.querySelector('#modalTitle')
+let modalBody = document.querySelector('#modalBody')
+let modalBtn = document.querySelector('#modalBtn')
+
+
+function rePlay(){
+    closeModal()
+    
+    level = 1
+    score = 0
+    lives = 3
+    min = 0
+    sec = 0
+    
+    vite.innerHTML = `${lives}`
+    punti.innerHTML =`${score}`
+    livello.innerHTML = `${level}`
+    tempo.innerHTML="00:00"
+
+    bricks1 = []
+    let mattoni = Array.from(document.querySelectorAll('.brick'))
+    
+    for(let i=0; i<mattoni.length; i++){
+        mattoni[i].remove()
+    }
+    mattoni = []
+    
+    addBricks1()
+  
+    domBoard.addEventListener('click', ballMove)
+}
+
+function openModal() {
+    const backdrop = document.createElement('div');
+    backdrop.classList.add('modal-backdrop', 'fade');
+    document.body.classList.add('modal-open');
+    document.body.appendChild(backdrop);
+    modal.style.display = 'block';
+    modal.setAttribute('aria-hidden', 'false', 'show');
+    
+    setTimeout(() => {
+        modal.classList.add('show');
+        backdrop.classList.add('show');
+    });
+}
+
+function closeModal() {
+    const backdrop = document.querySelector('.modal-backdrop.fade.show');
+    document.body.classList.remove('modal-open');
+    modal.setAttribute('aria-hidden', 'true');
+    //backdrop.classList.remove('show');
+    
+    setTimeout(() => {
+      modal.classList.remove('show');
+    });
+    
+    setTimeout(() => {
+      modal.style.display = 'none';
+        backdrop.remove();
+    }, 500);
+}
 
 // Collisions
 // ----------------------------------------------------------
@@ -287,24 +364,34 @@ function checkCollision(){
         vite.innerHTML = `${lives}`
 
 
-        if(lives > 0) {
-            console.log('ritenta')
-            restart()
-          
-            
-            
-        }else{
-            
-            restart()
-            domBoard.removeEventListener('click', ballMove)
-            console.log('looser')
-            let modal = document.querySelector('#exampleModal')
-            //modal.classList.add('show')
+        
 
-            
-            
-        }
-
+            if(lives ==2){
+                openModal()
+                modalTitle.innerHTML = "Ahi ahi ahi!!"
+                modalBody.innerHTML = "Ti restano ancora due vite!!"
+                modalBtn.innerHTML = "Continua"
+                modalBtn.addEventListener('click', closeModal)
+                restart()
+            }else if(lives ==1){
+                openModal()
+                modalTitle.innerHTML = "Ahi ahi ahi!!"
+                modalBody.innerHTML = "Ti resta ancora una vita!!"
+                modalBtn.innerHTML = "Continua"
+                modalBtn.addEventListener('click', closeModal)
+                restart()
+            }else if (lives == 0) {        
+                openModal()
+                modalTitle.innerHTML = "Hai perso!!"
+                modalBody.innerHTML = "Vuoi giocare ancora?"
+                modalBtn.innerHTML = "Sì"
+                modalBtn.addEventListener('click', rePlay)
+                
+                restart()
+                domBoard.removeEventListener('click', ballMove)
+            }
+        
+        
     }
 }
 
@@ -375,8 +462,8 @@ function restart(){
 
 
 
-vite.innerHTML = `${lives}`
-livello.innerHTML = `${level}`
+//vite.innerHTML = `${lives}`
+//livello.innerHTML = `${level}`
 
         
 
