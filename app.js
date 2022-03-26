@@ -6,12 +6,45 @@ import{Ball} from './modules/ball.js'
 
 // Variabili globali
 // ----------------------------------------------------------
-let command = document.querySelector('#command')
-let punti = document.querySelector('#punti')
-let score = 0
-let timerId
+//let command = document.querySelector('#command')
 
-console.log(board.width)
+let punti = document.querySelector('#punti')
+let vite = document.querySelector('#vite')
+let tempo = document.querySelector('#tempo')
+let livello = document.querySelector('#livello')
+
+
+let lives = 3
+let score = 0
+let level = 1
+
+// game time
+// Variabili Gestione timer
+
+let sec = 0
+let min = 0
+let t
+
+//Funzioni timer
+function tick(){
+    sec++
+    if(sec>=60){
+        sec=0;
+        min++;      
+    }
+}
+
+function add(){
+    tick()
+    tempo.textContent = (min>9 ? min : '0'+ min) + ':' + (sec>9 ? sec : '0'+ sec)
+    timer()      
+}
+
+function timer(){
+    t = setTimeout(add, 1000)
+}
+
+
 // Creazione pad
 // ----------------------------------------------------------
 
@@ -19,9 +52,11 @@ let pad = new Pad()
 let padPosition = board.width/2 - pad.width/2
 pad.display(padPosition)
 
+// Pad Movement
 document.addEventListener('keydown', movePadKey);
 domBoard.addEventListener('mousemove', movePadMouse);
 
+let command = document.querySelector('#command')
 document.addEventListener('touchstart', handleTouchEvent, true);
 document.addEventListener('touchmove', handleTouchEvent, true);
 document.addEventListener('touchend', handleTouchEvent, true);
@@ -119,13 +154,16 @@ let ball = new Ball(0,0)
 ball.display((board.width/2-ball.diam/2), pad.top)
 domBoard.addEventListener('click', ballMove)
 
+let timerId
 let pastArrX =[]
 let pastArrY = []
+
 
 function ballMove(){
     document.removeEventListener('click', ballMove)
     timerId = setInterval(move, ball.speed)
-
+    timer()
+    
 
     function move(){
 
@@ -170,75 +208,103 @@ function checkCollision(){
     }
 
     //Pad Collision
-    if(ball.bottom < pad.top ){
 
-        if(
-            // Center bounce
-            (ball.left >= (pad.left)) && (ball.right <= pad.right)){
-            
-            //clearInterval(timerId)
-            changeYDirection()
-            //console.log('pad bounce')
-            //console.table(ball)
-            //changeDirection()
-            
-        } 
-    }
-
+    let lastX = pastArrX[pastArrX.length-2]
+    let lastY = pastArrY[pastArrY.length-2]
     
-    //     // Pad Left corner bounce
+       
+        if((ball.right >= (pad.left)
+            && ball.left <= (pad.right))
+            
+            && ((ball.bottom <= (pad.top))
+            && (ball.top >= (pad.bottom))))
+            {
+
+                if(((lastY+ball.diam)< pad.bottom) || lastY > pad.top){
+                    changeYDirection()
+                }
+
+                else if(((lastX+ball.diam) < pad.left) || lastX>pad.right){
+                    changeXDirection()
+                }
+
+            }
+    
+    // Pad Left corner bounce
         
-    //     // if (
+        // if (
             
-    //         //             ((ballP[0] > (padPosition - padWidth/2)
-    //         //                 &&  (ballP[0] < (padPosition - padWidth/2 + 20))))
+            //             ((ballP[0] > (padPosition - padWidth/2)
+            //                 &&  (ballP[0] < (padPosition - padWidth/2 + 20))))
             
-    //         //         &&  ((ballP[1] < (padHeight*3)) && ((ballP[1]+ballDiametro) > (padHeight*2)))
+            //         &&  ((ballP[1] < (padHeight*3)) && ((ballP[1]+ballDiametro) > (padHeight*2)))
             
-    //         // )
-    //         //     {
-    //             //     console.log('left corner')
+            // )
+            //     {
+                //     console.log('left corner')
                 
-    //             //     if(xDirection>=0){
+                //     if(xDirection>=0){
 
-    //                 //         xDirection += 1
-    //                 //         yDirection += 1
+                    //         xDirection += 1
+                    //         yDirection += 1
                     
-    //                 //     }else{
-    //                     //         xDirection += -1
-    //                     //         yDirection += 1 
-    //                     //     }
+                    //     }else{
+                        //         xDirection += -1
+                        //         yDirection += 1 
+                        //     }
                         
-    //                     //     changeYDirection()
-    //                     //     //changeDirection()
-    //                     // } 
+                        //     changeYDirection()
+                        //     //changeDirection()
+                        // } 
                         
-    //                     // Right corner bounce
-    //                     // if(
-    //                     // (ballP[0] > (padPosition + padWidth/2 -20)) && (ballP[0] <= (padPosition + padWidth/2))){
-    //                     //     console.log('right corner')
+                        // Right corner bounce
+                        // if(
+                        // (ballP[0] > (padPosition + padWidth/2 -20)) && (ballP[0] <= (padPosition + padWidth/2))){
+                        //     console.log('right corner')
                             
-    //                     //     if(xDirection>=0){
-    //                     //         xDirection += 1
-    //                     //         yDirection += 1
+                        //     if(xDirection>=0){
+                        //         xDirection += 1
+                        //         yDirection += 1
                                 
-    //                     //     }else{
-    //                     //     xDirection += -1
-    //                     //     yDirection += 1 
-    //                     //     }
+                        //     }else{
+                        //     xDirection += -1
+                        //     yDirection += 1 
+                        //     }
         
-    //                     //     changeYDirection()
+                        //     changeYDirection()
         
-    //                         //clearInterval(timerId)
-    //                         //changeDirection()
-    // }
-    
+                            //clearInterval(timerId)
+                            //changeDirection()
+                        // }
+    //
                         
     // Lost
     if(ball.bottom < 0){
+        lives--
         clearInterval(timerId)
-        console.log('looser')
-       
+        clearInterval(t)
+        
+        vite.innerHTML = `${lives}`
+
+
+        if(lives > 0) {
+            console.log('ritenta')
+            restart()
+          
+            
+            
+        }else{
+            
+            restart()
+            domBoard.removeEventListener('click', ballMove)
+            console.log('looser')
+            let modal = document.querySelector('#exampleModal')
+            //modal.classList.add('show')
+
+            
+            
+        }
+
     }
 }
 
@@ -298,13 +364,19 @@ function changeYDirection(){
     ball.direction[1] = - ball.direction[1]
 }
 
-
-
-
-
-
+function restart(){
+    pad.remove()
+    pad.display(board.width/2 - pad.width/2)
     
+    ball.remove()
+    ball.direction[1] = - ball.direction[1]
+    ball.display((board.width/2-ball.diam/2), pad.top)
+}
 
+
+
+vite.innerHTML = `${lives}`
+livello.innerHTML = `${level}`
 
         
 

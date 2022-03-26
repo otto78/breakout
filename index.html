@@ -25,10 +25,10 @@
         <div class="row justify-content-center align-items-md-center vh-100">
             <div class="col-11 col-md-10 p-0 mt-3 mt-md-0">
                 <div id="tabellone" class="row justify-content-md-between mx-0 mb-3 neon-border">
-                    <p class="col-5 order-1 col-md-2 flex-fill">Vite: <span id="vite">0</span></p>
+                    <p class="col-5 order-1 col-md-2 flex-fill">Vite: <span id="vite"></span></p>
                     <p class="col-5 order-4 order-md-2 col-md-2 flex-fill">Punti: <span id="punti">0</span></p>
                     <p class="col-5 order-2 order-md-3 col-md-2 flex-fill">Livello: <span id="livello">1</span></p>
-                    <p class="col-7 order-5 order-md-4 col-md-2 flex-fill">Tempo: <span id="tempo">0:00</span></p>
+                    <p class="col-7 order-5 order-md-4 col-md-2 flex-fill">Tempo: <span id="tempo">00:00</span></p>
                     <p class="col-2 order-3 order-md-5 col-md-1"><i id="settings" class="bi bi-gear"></i></p>
                 </div>
                 <div id="board" class="neon-border">
@@ -39,6 +39,34 @@
             <div id="command" class="col-12 d-md-none neon-border"></div>
         </div>
     </div>
+
+    <!-- Modals -->
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
     <!-- Scripts -->
     
     <script type="module" src="./app.js"></script>
