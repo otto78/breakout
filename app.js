@@ -97,7 +97,6 @@ function movePadMouse(e) {
         pad.move(padPosition)   
     }      
 }
-//da risolvere bug posizionamento command ai magini e allo start dopo il passaggio di livello
 
 function movePadCommand(e) {
     let command = document.querySelector('#command')
@@ -121,6 +120,75 @@ let bricks1 = []
 function addBricks1(){
 
     for(let j=0; j<1; j++){
+        for(let i=0; i<8; i++){
+            
+            let x = 10 + i*10
+            let y = 65 + j*5
+            bricks1.push(new Brick(x,y))
+        }
+    }
+
+    for(let i=0; i<bricks1.length; i++){
+        let brick = document.createElement('div')
+        brick.classList.add('brick', 'neon-border')
+              
+        brick.style.left = bricks1[i].left + 'px'
+        brick.style.bottom = bricks1[i].bottom + 'px'
+        
+        domBoard.append(brick)
+        
+    }
+}
+
+function addBricks2(){
+
+    for(let j=0; j<2; j++){
+        for(let i=0; i<8; i++){
+            
+            let x = 10 + i*10
+            let y = 65 + j*5
+            bricks1.push(new Brick(x,y))
+        }
+    }
+
+    for(let i=0; i<bricks1.length; i++){
+        let brick = document.createElement('div')
+        brick.classList.add('brick', 'neon-border')
+              
+        brick.style.left = bricks1[i].left + 'px'
+        brick.style.bottom = bricks1[i].bottom + 'px'
+        
+        domBoard.append(brick)
+        
+    }
+}
+
+function addBricks3(){
+
+    for(let j=0; j<3; j++){
+        for(let i=0; i<8; i++){
+            
+            let x = 10 + i*10
+            let y = 65 + j*5
+            bricks1.push(new Brick(x,y))
+        }
+    }
+
+    for(let i=0; i<bricks1.length; i++){
+        let brick = document.createElement('div')
+        brick.classList.add('brick', 'neon-border')
+              
+        brick.style.left = bricks1[i].left + 'px'
+        brick.style.bottom = bricks1[i].bottom + 'px'
+        
+        domBoard.append(brick)
+        
+    }
+}
+
+function addBricks4(){
+
+    for(let j=0; j<4; j++){
         for(let i=0; i<8; i++){
             
             let x = 10 + i*10
@@ -238,14 +306,21 @@ function nextLevel(){
 
     ball.speed = ball.speed - 2
 
-    let mattoni = Array.from(document.querySelectorAll('.brick'))
-    for(let i=0; i<mattoni.length; i++){
-        mattoni[i].remove()
-    }
-    mattoni = []
-    bricks1 = []
+    // let mattoni = Array.from(document.querySelectorAll('.brick'))
+    // for(let i=0; i<mattoni.length; i++){
+    //     mattoni[i].remove()
+    // }
+    // mattoni = []
+    // bricks1 = []
     
-    addBricks1()
+    if(level == 2){
+        addBricks2()
+    }else if (level == 3){
+        addBricks3()
+    }else if (level == 4){
+        addBricks4()
+    }
+    
   
     domBoard.addEventListener('click', ballMove)
 }
@@ -257,6 +332,9 @@ function restart(){
     ball.remove()
     ball.direction[1] = - ball.direction[1]
     ball.display((board.width/2-ball.diam/2), pad.top)
+    command.style.left = (board.width/2+ board.x -40) + 'px'
+
+
 }
 
 function openModal() {
@@ -386,7 +464,7 @@ function checkBrickCollision(){
             score++
             punti.innerHTML = score
             let a = document.querySelector('a')
-            
+
             // Winner conditions
             if(bricks1.length == 0){
                 clearInterval(timerId)
