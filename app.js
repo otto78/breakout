@@ -6,8 +6,6 @@ import{Ball} from './modules/ball.js'
 
 // Variabili globali
 // ----------------------------------------------------------
-//let command = document.querySelector('#command')
-
 let punti = document.querySelector('#punti')
 let vite = document.querySelector('#vite')
 let tempo = document.querySelector('#tempo')
@@ -54,35 +52,34 @@ pad.display(padPosition)
 document.addEventListener('keydown', movePadKey);
 domBoard.addEventListener('mousemove', movePadMouse);
 
-let command = document.querySelector('#command')
-document.addEventListener('touchstart', handleTouchEvent, true);
-document.addEventListener('touchmove', handleTouchEvent, true);
-document.addEventListener('touchend', handleTouchEvent, true);
-document.addEventListener('touchcancel', handleTouchEvent, true);
+document.addEventListener('touchstart', movePadCommand, true);
+document.addEventListener('touchmove', movePadCommand, true);
+document.addEventListener('touchend', movePadCommand, true);
+document.addEventListener('touchcancel', movePadCommand, true);
 
-function movePadKey(event){
-  
-    if(event.key == 'ArrowLeft' && padPosition > 0){         
+function movePadKey(e){
+    
+    if(e.key == 'ArrowLeft' && padPosition > 0){         
         padPosition = padPosition - 50
-
+        
         if(padPosition < pad.width/2) {padPosition = pad.width/2}
         
         pad.remove()
         pad.display(padPosition)
     }
     
-    if(event.key == 'ArrowRight' && padPosition < board.width - pad.width/2){      
+    if(e.key == 'ArrowRight' && padPosition < board.width - pad.width/2){      
         padPosition = padPosition + 50    
-
+        
         if(padPosition > board.width - pad.width/2) {padPosition = board.width - pad.width/2} 
-
+        
         pad.move(padPosition)
-               
+        
     }
 }
 
-function movePadMouse(event) {
-    let pointer = event.clientX - board.x;
+function movePadMouse(e) {
+    let pointer = e.clientX - board.x;
     
     // data.innerHTML = `
     
@@ -100,10 +97,13 @@ function movePadMouse(event) {
         pad.move(padPosition)   
     }      
 }
+//da risolvere bug posizionamento command ai magini e allo start dopo il passaggio di livello
 
-function handleTouchEvent(e) {
+function movePadCommand(e) {
+    let command = document.querySelector('#command')
+    
     let commandWidth = command.getBoundingClientRect().width
-
+    
     if (e.touches.length === 0 ) return;
     //e.preventDefault();
     e.stopPropagation();
@@ -155,16 +155,21 @@ let timerId
 let pastArrX =[]
 let pastArrY = []
 
+
+
+
 function ballMove(){
     document.removeEventListener('click', ballMove)
     ball.direction[1] = 2
-
+    
+    let rnd = Math.floor(Math.random()*10)+1
+    if  (rnd>=5)
+        {ball.direction[0] = 2}
+    else{ball.direction[0] = -2}
+    
     timerId = setInterval(move, ball.speed)
     timer()
-    console.log('al Click')
-    console.log('speed: '+ ball.speed)
-    
-    
+ 
     function move(){
 
         checkCollision()
@@ -299,90 +304,35 @@ function checkCollision(){
     // ` 
     
     // Walls collision
-    if(ball.right>= board.right || ball.left <= 0){
-        
+    if(ball.right>= board.right || ball.left <= 0){       
         changeXDirection()
     }
 
     // Ceil collision
     if(ball.top >= board.top){
-        changeYDirection()
-       
+        changeYDirection()      
     }
 
     //Pad Collision
     let lastX = pastArrX[pastArrX.length-2]
     let lastY = pastArrY[pastArrY.length-2]
       
-        if((ball.right >= (pad.left)
-            && ball.left <= (pad.right))
-            
-            && ((ball.bottom <= (pad.top))
-            && (ball.top >= (pad.bottom))))
-            {
-                if(((lastY+ball.diam)< pad.bottom) || lastY > pad.top){
-                    changeYDirection()
-                }
-
-                else if(((lastX+ball.diam) < pad.left) || lastX>pad.right){
-                    changeXDirection()
-                }
-            }
-    
-    // Pad Left corner bounce
-        
-        // if (
-            
-            //             ((ballP[0] > (padPosition - padWidth/2)
-            //                 &&  (ballP[0] < (padPosition - padWidth/2 + 20))))
-            
-            //         &&  ((ballP[1] < (padHeight*3)) && ((ballP[1]+ballDiametro) > (padHeight*2)))
-            
-            // )
-            //     {
-                //     console.log('left corner')
-                
-                //     if(xDirection>=0){
-
-                    //         xDirection += 1
-                    //         yDirection += 1
-                    
-                    //     }else{
-                        //         xDirection += -1
-                        //         yDirection += 1 
-                        //     }
-                        
-                        //     changeYDirection()
-                        //     //changeDirection()
-                        // } 
-                        
-                        // Right corner bounce
-                        // if(
-                        // (ballP[0] > (padPosition + padWidth/2 -20)) && (ballP[0] <= (padPosition + padWidth/2))){
-                        //     console.log('right corner')
-                            
-                        //     if(xDirection>=0){
-                        //         xDirection += 1
-                        //         yDirection += 1
-                                
-                        //     }else{
-                        //     xDirection += -1
-                        //     yDirection += 1 
-                        //     }
-        
-                        //     changeYDirection()
-        
-                            //clearInterval(timerId)
-                            //changeDirection()
-                        // }
-    //
-                        
-    // Lost
+    if((ball.right >= (pad.left) && ball.left <= (pad.right))         
+    && ((ball.bottom <= (pad.top)) && (ball.top >= (pad.bottom))))
+    {
+        if(((lastY+ball.diam)< pad.bottom) || lastY > pad.top){
+            changeYDirection()
+        }
+        else if(((lastX+ball.diam) < pad.left) || lastX>pad.right){
+            changeXDirection()
+        }
+    }
+                      
+    // Lost consition
     if(ball.bottom < 0){
         lives--
         vite.innerHTML = `${lives}`
-        console.log(lives)
-        
+               
         clearInterval(timerId)
         clearInterval(t)
         
@@ -391,32 +341,20 @@ function checkCollision(){
             modalTitle.innerHTML = "Ahi ahi ahi!!"
             modalBody.innerHTML = "Ti restano ancora due vite!!"
             modalBtn.innerHTML = "Continua"
-
-            modalBtn.addEventListener('click', play)
-               
+            modalBtn.addEventListener('click', play)               
         }else if(lives ==1){
             openModal()
             modalTitle.innerHTML = "Ahi ahi ahi!!"
             modalBody.innerHTML = "Ti resta ancora una vita!!"
             modalBtn.innerHTML = "Continua"
-
-            modalBtn.addEventListener('click', play)
-            
+            modalBtn.addEventListener('click', play)           
         }else if (lives == 0) {        
             openModal()
             modalTitle.innerHTML = "Hai perso!!"
             modalBody.innerHTML = "Vuoi giocare ancora?"
             modalBtn.innerHTML = "Sì"
-
-            modalBtn.addEventListener('click', rePlay)             
-            
-        }
-        
-        
-        
-        console.log('al Floor')
-        console.log('speed: '+ ball.speed)
-        
+            modalBtn.addEventListener('click', rePlay)                        
+        }       
     }
 }
 
@@ -427,53 +365,72 @@ function checkBrickCollision(){
     for(let i=0; i<bricks1.length; i++){       
         
         let mattoni = Array.from(document.querySelectorAll('.brick'))
-        if((ball.right >= (bricks1[i].left)
-            && ball.left <= (bricks1[i].right))
-            
-            && ((ball.bottom <= (bricks1[i].top))
-            && (ball.top >= (bricks1[i].bottom))))
-            {
 
-                if(((lastY+ball.diam)< bricks1[i].bottom) || lastY > bricks1[i].top){
-                    changeYDirection()
-                }
+        if((ball.right >= (bricks1[i].left) && ball.left <= (bricks1[i].right))
+        && ((ball.bottom <= (bricks1[i].top)) && (ball.top >= (bricks1[i].bottom))))
+        {
 
-                else if(((lastX+ball.diam) < bricks1[i].left) || lastX>bricks1[i].right){
-                    changeXDirection()
-                }
+            if(((lastY+ball.diam)< bricks1[i].bottom) || lastY > bricks1[i].top){
+                changeYDirection()
+            }
+            else if(((lastX+ball.diam) < bricks1[i].left) || lastX>bricks1[i].right){
+                changeXDirection()
+            }
 
-                pastArrX=[]
-                pastArrY=[]
+            pastArrX=[]
+            pastArrY=[]
         
-                mattoni[i].remove()
-               
-                
-                bricks1.splice(i,1)
-                score++
-                punti.innerHTML = score
+            mattoni[i].remove()              
+            bricks1.splice(i,1)
 
-                if(bricks1.length == 0){
-                    clearInterval(timerId)
-                    clearInterval(t)
-                    level++
-                    livello.innerHTML = `${level}`
-                   
+            score++
+            punti.innerHTML = score
+            let a = document.querySelector('a')
+            
+            // Winner conditions
+            if(bricks1.length == 0){
+                clearInterval(timerId)
+                clearInterval(t)
+                level++
+                livello.innerHTML = `${level}`
+
+
+                if(level<=2){
                     openModal()
                     modalTitle.innerHTML = "Hai vinto!!"
                     modalBody.innerHTML = "Next Level?"
                     modalBtn.innerHTML = "Ovvio"
 
                     modalBtn.addEventListener('click', nextLevel)             
-                    
-                    console.log('a Brick == 0')
-                    console.log('speed: '+ ball.speed)
-                    
-                    
-                    
+                }else if(level==3){
+                    openModal()
+                    modalTitle.innerHTML = "Hai vinto!!"
+                    modalBody.innerHTML = "Bravo, ultimo livello!"
+                    modalBtn.innerHTML = "Vai"
+
+                    modalBtn.addEventListener('click', nextLevel) 
+                }else if(level==4){
+                    livello.innerHTML = "Bonus"
+                    openModal()
+                    modalTitle.innerHTML = "Hai vinto!!"
+                    modalBody.innerHTML = "Ok! Adesso basta così!"
+                    modalBtn.innerHTML = "Ancora una dai!"
+                    modalBtn.addEventListener('click', nextLevel)
+
+                    a.innerHTML="Va bene, ciao!" 
+
+                }else if(level>4){
+                    livello.innerHTML = "Bonus"
+                    openModal()
+                    modalTitle.innerHTML = "Hai vinto!!"
+                    modalBody.innerHTML = "Ok! Adesso basta così!"
+                    modalBtn.innerHTML = "Ricomincia da capo"
+                    modalBtn.addEventListener('click', rePlay)
+
+                    a.innerHTML="Va bene, ciao!" 
                 }
-                
-            }
-            
+            }               
+        }          
     }
 }
 

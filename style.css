@@ -83,12 +83,10 @@
 
 /* Stile dei brick */
 
-.brick{
-    
+.brick{   
     position: absolute;
     height: 5%;
-    width: 10%;
-    
+    width: 10%;   
     background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
 }
 
@@ -102,3 +100,54 @@
     font-size: 1.5rem;
     color: rgba(255, 255, 255, 0.231);
 }
+
+
+
+/* Modal restyle */
+.modal-content{
+    background-color: transparent;
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+    backdrop-filter: blur(8px);
+    color: green;
+}
+
+.modal-header{
+    border-color: green;
+}
+
+.modal-footer{
+    border-color: green;
+    justify-content: center;
+}
+
+.btn{
+    min-width: 30%;
+}
+
+.btn-outline-success{
+    color: green;
+   
+}
+
+.btn-outline-success:hover{
+    color: rgb(156, 249, 156);
+    background-color: transparent;
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+}
+
+.btn-outline-warning{
+    color: yellow;
+    border: 1px solid rgba(255, 255, 0, 0.8);
+    box-shadow: 0 0 4px 1px rgba(255, 255, 0, 0.8), 0 0 4px 1px rgba(255, 255, 0, 0.8) inset;
+
+}
+
+.btn-outline-warning:hover{
+
+    color: rgb(254, 254, 171);
+    background-color: rgba(255, 255, 0, 0.15);
+    
+}
+
+
+
