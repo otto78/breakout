@@ -6,22 +6,57 @@ import{Ball} from './modules/ball.js'
 
 // Variabili globali
 // ----------------------------------------------------------
+let title = document.querySelector('#title')
+let tabellone = document.querySelector('#tabellone')
 let punti = document.querySelector('#punti')
 let vite = document.querySelector('#vite')
 let tempo = document.querySelector('#tempo')
 let livello = document.querySelector('#livello')
+let settings = document.querySelector('#settings')
 
+//Variabili Modal
+let modal = document.querySelector('#modal')
+let modalHeader = document.querySelector('.modal-header')
+let modalTitle = document.querySelector('#modalTitle')
+let modalBody = document.querySelector('#modalBody')
+let modalBtn = document.querySelector('#modalBtn')
+let a = document.querySelector('a')
 
+// Variabili suoni
+let hitWall = new Audio('./media/hit-wall.mp3')
+let hitBrick = new Audio('./media/hit-brick.mp3')
+let crashDown = new Audio ('./media/crash-down.wav')
+let winner = new Audio ('./media/winner.wav')
+let sounds = [hitWall, hitBrick, crashDown, winner]
+
+// Status level
 let lives = 3
 let score = 0
 let level = 1
 
 // Game timer
-
 let sec = 0
 let min = 0
 let t
 
+let soundEfx = true
+sound(soundEfx)
+
+// Start
+openModal()
+modalHeader.classList.add('d-flex','justify-content-center')
+modalBody.classList.add('text-center')
+modalTitle.innerHTML = "Benvenuto!!"
+modalBody.innerHTML = "Per giocare devi solo premere sì"
+modalBtn.innerHTML = "Sì"
+modalBtn.addEventListener('click', rePlay)    
+
+
+settings.addEventListener('click', setting)
+
+
+// Funzioni timer
+// ----------------------------------------------------------
 function tick(){
     sec++
     if(sec>=60){
@@ -46,7 +81,7 @@ function timer(){
 
 let pad = new Pad()
 let padPosition = board.width/2 - pad.width/2
-pad.display(padPosition)
+
 
 // Pad Movement
 document.addEventListener('keydown', movePadKey);
@@ -111,35 +146,36 @@ function movePadCommand(e) {
     pad.move(touch.pageX - (3/4)*pad.width)
 }
 
+
 // Creazione Brick
 // ----------------------------------------------------------
+let bricks = []
 
 // level 1
-let bricks1 = []
-
-function addBricks1(){
+function addbricks(){
 
     for(let j=0; j<1; j++){
         for(let i=0; i<8; i++){
             
             let x = 10 + i*10
             let y = 65 + j*5
-            bricks1.push(new Brick(x,y))
+            bricks.push(new Brick(x,y))
         }
     }
 
-    for(let i=0; i<bricks1.length; i++){
+    for(let i=0; i<bricks.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
               
-        brick.style.left = bricks1[i].left + 'px'
-        brick.style.bottom = bricks1[i].bottom + 'px'
+        brick.style.left = bricks[i].left + 'px'
+        brick.style.bottom = bricks[i].bottom + 'px'
         
         domBoard.append(brick)
         
     }
 }
 
+// level 2
 function addBricks2(){
 
     for(let j=0; j<2; j++){
@@ -147,22 +183,23 @@ function addBricks2(){
             
             let x = 10 + i*10
             let y = 65 + j*5
-            bricks1.push(new Brick(x,y))
+            bricks.push(new Brick(x,y))
         }
     }
 
-    for(let i=0; i<bricks1.length; i++){
+    for(let i=0; i<bricks.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
               
-        brick.style.left = bricks1[i].left + 'px'
-        brick.style.bottom = bricks1[i].bottom + 'px'
+        brick.style.left = bricks[i].left + 'px'
+        brick.style.bottom = bricks[i].bottom + 'px'
         
         domBoard.append(brick)
         
     }
 }
 
+// level 3
 function addBricks3(){
 
     for(let j=0; j<3; j++){
@@ -170,22 +207,23 @@ function addBricks3(){
             
             let x = 10 + i*10
             let y = 65 + j*5
-            bricks1.push(new Brick(x,y))
+            bricks.push(new Brick(x,y))
         }
     }
 
-    for(let i=0; i<bricks1.length; i++){
+    for(let i=0; i<bricks.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
               
-        brick.style.left = bricks1[i].left + 'px'
-        brick.style.bottom = bricks1[i].bottom + 'px'
+        brick.style.left = bricks[i].left + 'px'
+        brick.style.bottom = bricks[i].bottom + 'px'
         
         domBoard.append(brick)
         
     }
 }
 
+// level Bonus
 function addBricks4(){
 
     for(let j=0; j<4; j++){
@@ -193,47 +231,36 @@ function addBricks4(){
             
             let x = 10 + i*10
             let y = 65 + j*5
-            bricks1.push(new Brick(x,y))
+            bricks.push(new Brick(x,y))
         }
     }
 
-    for(let i=0; i<bricks1.length; i++){
+    for(let i=0; i<bricks.length; i++){
         let brick = document.createElement('div')
         brick.classList.add('brick', 'neon-border')
               
-        brick.style.left = bricks1[i].left + 'px'
-        brick.style.bottom = bricks1[i].bottom + 'px'
+        brick.style.left = bricks[i].left + 'px'
+        brick.style.bottom = bricks[i].bottom + 'px'
         
         domBoard.append(brick)
         
     }
 }
 
-addBricks1()
+
 
 
 // Creazione ball
 // ----------------------------------------------------------
-
 let ball = new Ball(0,0)
-ball.display((board.width/2-ball.diam/2), pad.top)
 domBoard.addEventListener('click', ballMove)
 
 let timerId
 let pastArrX =[]
 let pastArrY = []
 
-
-
-
 function ballMove(){
     document.removeEventListener('click', ballMove)
-    ball.direction[1] = 2
-    
-    let rnd = Math.floor(Math.random()*10)+1
-    if  (rnd>=5)
-        {ball.direction[0] = 2}
-    else{ball.direction[0] = -2}
     
     timerId = setInterval(move, ball.speed)
     timer()
@@ -253,15 +280,9 @@ function ballMove(){
     }
 }
 
-// Modal functions and conditions
+
+// Modal conditions
 // ----------------------------------------------------------
-
-let modal = document.querySelector('#modal')
-let modalTitle = document.querySelector('#modalTitle')
-let modalBody = document.querySelector('#modalBody')
-let modalBtn = document.querySelector('#modalBtn')
-
-
 function play(){
     modalBtn.removeEventListener('click', play)
     closeModal()
@@ -269,8 +290,23 @@ function play(){
     domBoard.addEventListener('click', ballMove)
 }
 
+function goOn(){
+    modalBtn.removeEventListener('click', goOn)
+    closeModal()
+    domBoard.addEventListener('click', ballMove)
+
+    soundEfx = document.querySelector('#soundEfx').checked
+    sound(soundEfx)
+}
+
 function rePlay(){
     modalBtn.removeEventListener('click', rePlay)
+    modalHeader.classList.remove('d-flex','justify-content-center')
+    modalBody.classList.remove('text-center')
+    tabellone.classList.remove('d-none')
+    title.classList.add('d-none')
+
+    
     closeModal()
     restart()
 
@@ -286,7 +322,7 @@ function rePlay(){
     livello.innerHTML = `${level}`
     tempo.innerHTML="00:00"
 
-    bricks1 = []
+    bricks = []
     let mattoni = Array.from(document.querySelectorAll('.brick'))
     
     for(let i=0; i<mattoni.length; i++){
@@ -294,7 +330,7 @@ function rePlay(){
     }
     mattoni = []
     
-    addBricks1()
+    addbricks()
   
     domBoard.addEventListener('click', ballMove)
 }
@@ -311,7 +347,7 @@ function nextLevel(){
     //     mattoni[i].remove()
     // }
     // mattoni = []
-    // bricks1 = []
+    // bricks = []
     
     if(level == 2){
         addBricks2()
@@ -327,14 +363,18 @@ function nextLevel(){
 
 function restart(){
     pad.remove()
-    pad.display(board.width/2 - pad.width/2)
-    
     ball.remove()
-    ball.direction[1] = - ball.direction[1]
+    
+    ball.direction[1] = 2
+    
+    let rnd = Math.floor(Math.random()*10)+1
+    if  (rnd>=5)
+    {ball.direction[0] = 2}
+    else{ball.direction[0] = -2}
+    
+    pad.display(board.width/2 - pad.width/2)
     ball.display((board.width/2-ball.diam/2), pad.top)
     command.style.left = (board.width/2+ board.x -40) + 'px'
-
-
 }
 
 function openModal() {
@@ -367,28 +407,26 @@ function closeModal() {
     }, 500);
 }
 
+
 // Collisions
 // ----------------------------------------------------------
-
 function checkCollision(){
-
-    // data.innerHTML = `  
-    // <div>Px: ${ball.left}</div>
-    // <div>Py: ${Math.floor(ball.bottom)}</div>
-    // <div>Pad Left: ${pad.left}</div>
-    // <div>Pad Right: ${pad.right}</div>
-    // <div>x: ${ball.direction[0]}</div>
-    // <div>y: ${ball.direction[1]}</div>
-    // ` 
     
     // Walls collision
     if(ball.right>= board.right || ball.left <= 0){       
-        changeXDirection()
+        changeXDirection() 
+
+        if(hitWall.volume != 0){
+            hitWall.cloneNode(true).play()
+        }
     }
 
     // Ceil collision
     if(ball.top >= board.top){
-        changeYDirection()      
+        changeYDirection()
+        if(hitWall.volume != 0){
+            hitWall.cloneNode(true).play()
+        }
     }
 
     //Pad Collision
@@ -400,9 +438,11 @@ function checkCollision(){
     {
         if(((lastY+ball.diam)< pad.bottom) || lastY > pad.top){
             changeYDirection()
+            hitWall.play()
         }
         else if(((lastX+ball.diam) < pad.left) || lastX>pad.right){
             changeXDirection()
+            hitWall.play()
         }
     }
                       
@@ -413,6 +453,7 @@ function checkCollision(){
                
         clearInterval(timerId)
         clearInterval(t)
+        crashDown.play()
         
         if(lives >=2){
             openModal()
@@ -440,18 +481,18 @@ function checkBrickCollision(){
     let lastX = pastArrX[pastArrX.length-2]
     let lastY = pastArrY[pastArrY.length-2]
     
-    for(let i=0; i<bricks1.length; i++){       
+    for(let i=0; i<bricks.length; i++){       
         
         let mattoni = Array.from(document.querySelectorAll('.brick'))
 
-        if((ball.right >= (bricks1[i].left) && ball.left <= (bricks1[i].right))
-        && ((ball.bottom <= (bricks1[i].top)) && (ball.top >= (bricks1[i].bottom))))
+        if((ball.right >= (bricks[i].left) && ball.left <= (bricks[i].right))
+        && ((ball.bottom <= (bricks[i].top)) && (ball.top >= (bricks[i].bottom))))
         {
 
-            if(((lastY+ball.diam)< bricks1[i].bottom) || lastY > bricks1[i].top){
+            if(((lastY+ball.diam)< bricks[i].bottom) || lastY > bricks[i].top){
                 changeYDirection()
             }
-            else if(((lastX+ball.diam) < bricks1[i].left) || lastX>bricks1[i].right){
+            else if(((lastX+ball.diam) < bricks[i].left) || lastX>bricks[i].right){
                 changeXDirection()
             }
 
@@ -459,19 +500,27 @@ function checkBrickCollision(){
             pastArrY=[]
         
             mattoni[i].remove()              
-            bricks1.splice(i,1)
-
+            bricks.splice(i,1)
+            if(bricks.length>0){
+                if(hitBrick.volume != 0){
+                    hitBrick.cloneNode(true).play()
+                }
+            }else{
+                
+                crashDown.play()
+            }
+            
             score++
             punti.innerHTML = score
-            let a = document.querySelector('a')
+            
 
             // Winner conditions
-            if(bricks1.length == 0){
+            if(bricks.length == 0){
                 clearInterval(timerId)
                 clearInterval(t)
                 level++
                 livello.innerHTML = `${level}`
-
+                winner.play()
 
                 if(level<=2){
                     openModal()
@@ -519,6 +568,51 @@ function changeXDirection(){
 function changeYDirection(){
     ball.direction[1] = - ball.direction[1]
 }
+
+
+// Settings
+// ----------------------------------------------------------
+function sound(val){
+    for(let i=0; i<sounds.length; i++){
+        if (val == true){
+            sounds[i].volume = 1
+            sounds[2].volume = 0.2
+        }else if (val == false){
+            sounds[i].volume = 0
+        }
+    }
+}
+
+let efxCheck
+
+function setting(){
+    openModal()
+    
+    clearInterval(timerId)
+    clearInterval(t)
+
+    if(soundEfx == true){
+        efxCheck = 'checked'
+    }else{efxCheck = ''}
+
+    modalTitle.innerHTML = "Settings"
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-6">Sound Effects</div>
+            <div class="col-6">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="soundEfx" ${efxCheck} />
+                </div>
+            </div>
+        </div>
+    
+    `
+    modalBtn.innerHTML = "Continua"
+    a.innerHTML = "Annulla"
+    modalBtn.addEventListener('click', goOn)
+
+}
+
 
 
 

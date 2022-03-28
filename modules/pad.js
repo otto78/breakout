@@ -36,8 +36,9 @@ class Pad{
 
     remove(){
         let p = document.querySelector('.pad')
+        if(p){
         p.remove()
-        
+        }
     }
 
     move(x){

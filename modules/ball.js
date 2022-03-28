@@ -42,8 +42,9 @@ class Ball{
 
     remove(){
         let b = document.querySelector('#ball')
+        if(b){
         b.remove()
-        
+        }
     }
 
     move(x,y){
