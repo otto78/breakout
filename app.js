@@ -28,11 +28,12 @@ let hitBrick = new Audio('./media/hit-brick.mp3')
 let crashDown = new Audio ('./media/crash-down.wav')
 let winner = new Audio ('./media/winner.wav')
 let sounds = [hitWall, hitBrick, crashDown, winner]
+let efxCheck
 
 // Status level
 let lives = 3
-let score = 0
-let level = 1
+let score
+let level
 
 // Game timer
 let sec = 0
@@ -460,19 +461,22 @@ function checkCollision(){
             modalTitle.innerHTML = "Ahi ahi ahi!!"
             modalBody.innerHTML = "Ti restano ancora due vite!!"
             modalBtn.innerHTML = "Continua"
-            modalBtn.addEventListener('click', play)               
+            modalBtn.addEventListener('click', play)
+            a.innerHTML="No"
         }else if(lives ==1){
             openModal()
             modalTitle.innerHTML = "Ahi ahi ahi!!"
             modalBody.innerHTML = "Ti resta ancora una vita!!"
             modalBtn.innerHTML = "Continua"
-            modalBtn.addEventListener('click', play)           
+            modalBtn.addEventListener('click', play)
+            a.innerHTML="No"           
         }else if (lives == 0) {        
             openModal()
             modalTitle.innerHTML = "Hai perso!!"
             modalBody.innerHTML = "Vuoi giocare ancora?"
             modalBtn.innerHTML = "Sì"
-            modalBtn.addEventListener('click', rePlay)                        
+            modalBtn.addEventListener('click', rePlay)    
+            a.innerHTML="No"                    
         }       
     }
 }
@@ -528,7 +532,8 @@ function checkBrickCollision(){
                     modalBody.innerHTML = "Next Level?"
                     modalBtn.innerHTML = "Ovvio"
 
-                    modalBtn.addEventListener('click', nextLevel)             
+                    modalBtn.addEventListener('click', nextLevel)    
+                    a.innerHTML="No" 
                 }else if(level==3){
                     openModal()
                     modalTitle.innerHTML = "Hai vinto!!"
@@ -572,19 +577,6 @@ function changeYDirection(){
 
 // Settings
 // ----------------------------------------------------------
-function sound(val){
-    for(let i=0; i<sounds.length; i++){
-        if (val == true){
-            sounds[i].volume = 1
-            sounds[2].volume = 0.2
-        }else if (val == false){
-            sounds[i].volume = 0
-        }
-    }
-}
-
-let efxCheck
-
 function setting(){
     openModal()
     
@@ -607,13 +599,34 @@ function setting(){
         </div>
     
     `
+
     modalBtn.innerHTML = "Continua"
-    a.innerHTML = "Annulla"
     modalBtn.addEventListener('click', goOn)
+    
+    a.innerHTML = "Annulla"
+    a.addEventListener('click', annulla)
 
 }
 
+function sound(val){
+    for(let i=0; i<sounds.length; i++){
+        if (val == true){
+            sounds[i].volume = 1
+            sounds[2].volume = 0.2
+        }else if (val == false){
+            sounds[i].volume = 0
+        }
+    }
+}
 
+function annulla(e){
+    a.removeEventListener('click', annulla)
+    e.preventDefault()
+    closeModal()
+
+    a.href = "https://otto78.github.io/hello-world/"
+    a.target = "blank"
+}
 
 
 
