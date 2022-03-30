@@ -1,12 +1,12 @@
 :root{
-    --primary: rgb(30, 143, 255);
-    --primary-light: rgb(153, 204, 254);
-    --primary-heavy: rgb(3, 89, 175);
-    --primary-003: rgba(30, 143, 255, 0.03);
-    --primary-01: rgba(30, 143, 255, 0.1);
-    --primary-03: rgba(30, 143, 255, 0.3);
-    --primary-05: rgba(30, 143, 255, 0.5);
-    --primary-08: rgba(30, 143, 255, 0.8);
+    --primary: darkred;
+    --primary-light: rgb(252, 154, 154);
+    --primary-heavy: rgb(79, 0, 0);
+    --primary-003: rgba(139, 0, 0, 0.03);
+    --primary-01: rgba(139, 0, 0, 0.1);
+    --primary-03: rgba(139, 0, 0, 0.3);
+    --primary-05: rgba(139, 0, 0, 0.5);
+    --primary-08: rgba(139, 0, 0, 0.8);
 
     --secondary: rgb(255, 255, 0);
     --secondary-light: rgb(254, 254, 183);
@@ -18,14 +18,14 @@
 /* Stile del playGround */
 
 .bg-stars{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url(./media/bg-blu.jpg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url(./media/bg-ironman.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;   
 }
 
 .neon-border{
-    
+   
     border: 1px solid var(--primary-08);
     border-radius: 5px;
     box-shadow: 0 0 4px 1px var(--primary-08), 0 0 4px 1px var(--primary-08) inset;    

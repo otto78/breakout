@@ -21,11 +21,6 @@ class Pad{
         let domPad = document.createElement('div')
         domPad.classList.add('pad', 'd-flex', 'justify-content-between', 'neon-border')
         
-        // domPad.innerHTML =`
-        // <div class="corner"></div>
-        // <div class="corner"></div>
-        // `
-        
         this.left = x 
         this.right = x + this.width
         
@@ -42,12 +37,10 @@ class Pad{
     }
 
     move(x){
-
         this.remove()
         this.left = x
         this.right = this.left + this.width
         this.display(this.left)
-
     }  
 }
 
