@@ -1,0 +1,171 @@
+:root{
+    --primary: rgb(30, 143, 255);
+    --primary-08: rgba(30, 143, 255, 0.8);
+    --primary-01: gba(30, 143, 255, 0.1);
+    --primary-03: gba(30, 143, 255, 0.3);
+    --primary-003: gba(30, 143, 255, 0.03);
+    --primary-05: gba(30, 143, 255, 0.5);
+}
+
+/* Stile del playGround */
+
+.bg-stars{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url(./media/bg-stars.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;   
+}
+
+.neon-border{
+    
+    border: 1px solid var(--primary-08);
+    border-radius: 5px;
+    box-shadow: 0 0 4px 1px var(--primary-08), 0 0 4px 1px var(--primary-08) inset;    
+}
+
+.title{
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+#tabellone{
+    height: 6vh;
+    color: var(--primary);
+    font-size: 1.2rem;
+    background-color: var(--primary-01);   
+}
+
+#tabellone p{
+    margin: 5px 0 5px 0;   
+}
+
+#settings:hover{
+    cursor: pointer;
+}
+
+#board{
+    height: 74vh;
+    position: relative;
+    backdrop-filter: blur(2px);
+    cursor: none;
+}
+
+#command{
+    position:absolute;
+    bottom: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+    
+}
+
+/* Stile del pad */
+
+.pad{
+    position: absolute;
+    bottom: 20px;
+    height: 3%;
+    width: 15%;
+    transform: translateX(-50%);
+
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+
+}
+
+.corner{
+    width: 20px;
+    height: 100%;
+    border-radius: 5px;
+    background-color: rgba(0, 128, 0, 0.5);
+    
+}
+
+
+
+/* Stile della ball */
+
+#ball{
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    
+    
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 0, 0.8);
+    box-shadow: 0 0 4px 1px rgba(255, 255, 0, 0.8), 0 0 4px 1px rgba(255, 255, 0, 0.8) inset;
+    background-image: radial-gradient(rgba(255, 255, 0, 0.03)), rgba(255, 255, 0, 0.3);
+
+}
+
+
+/* Stile dei brick */
+
+.brick{   
+    position: absolute;
+    height: 5%;
+    width: 10%;   
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+}
+
+
+/* Modal restyle */
+.modal-content{
+    background-color: transparent;
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+    backdrop-filter: blur(8px);
+    color: green;
+}
+
+.modal-header{
+    border-color: green;
+}
+
+.modal-footer{
+    border-color: green;
+    justify-content: center;
+}
+
+.btn{
+    min-width: 30%;
+}
+
+.btn-outline-success{
+    color: green;
+   
+}
+
+.btn-outline-success:hover{
+    color: rgb(156, 249, 156);
+    background-color: transparent;
+    background-image: radial-gradient(rgba(0, 128, 0, 0.3), rgba(0, 128, 0, 0.03));
+}
+
+.btn-outline-warning{
+    color: yellow;
+    border: 1px solid rgba(255, 255, 0, 0.8);
+    box-shadow: 0 0 4px 1px rgba(255, 255, 0, 0.8), 0 0 4px 1px rgba(255, 255, 0, 0.8) inset;
+
+}
+
+.btn-outline-warning:hover{
+
+    color: rgb(254, 254, 171);
+    background-color: rgba(255, 255, 0, 0.15);
+    
+}
+
+.form-check-input:checked{
+    background-color: green;
+    border-color: rgb(0, 62, 0);
+}
+
+.form-check-input{
+    background-color: rgba(255, 255, 0, 0.8);
+}
+
+.form-check-input:focus{
+    border-color: none;
+    box-shadow: none;
+}
