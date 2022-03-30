@@ -30,6 +30,15 @@ let winner = new Audio ('./media/winner.wav')
 let sounds = [hitWall, hitBrick, crashDown, winner]
 let efxCheck
 
+// Music
+let music = new Audio('./media/music1.mp3')
+music.loop = true
+music.volume = 0.3
+let musicSwitch
+let musicVol = true
+soundMusic(musicVol)
+
+
 // Status level
 let lives = 3
 let score
@@ -39,6 +48,7 @@ let level
 let sec = 0
 let min = 0
 let t
+
 
 let soundEfx = true
 sound(soundEfx)
@@ -262,10 +272,10 @@ let pastArrY = []
 
 function ballMove(){
     document.removeEventListener('click', ballMove)
-    
+    music.play()
     timerId = setInterval(move, ball.speed)
     timer()
- 
+    
     function move(){
 
         checkCollision()
@@ -298,6 +308,10 @@ function goOn(){
 
     soundEfx = document.querySelector('#soundEfx').checked
     sound(soundEfx)
+
+    musicVol = document.querySelector('#musicVol').checked
+    soundMusic(musicVol)
+
 }
 
 function rePlay(){
@@ -310,6 +324,7 @@ function rePlay(){
     
     closeModal()
     restart()
+    
 
     ball.speed = 10
     level = 1
@@ -379,6 +394,7 @@ function restart(){
 }
 
 function openModal() {
+    music.pause()
     const backdrop = document.createElement('div');
     backdrop.classList.add('modal-backdrop', 'fade');
     document.body.classList.add('modal-open');
@@ -587,6 +603,11 @@ function setting(){
         efxCheck = 'checked'
     }else{efxCheck = ''}
 
+    if(musicVol == true){
+        musicSwitch = 'checked'
+    }else{musicSwitch=''}
+
+
     modalTitle.innerHTML = "Settings"
     modalBody.innerHTML = `
         <div class="row">
@@ -594,6 +615,14 @@ function setting(){
             <div class="col-6">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="soundEfx" ${efxCheck} />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">Music</div>
+            <div class="col-6">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="musicVol" ${musicSwitch} />
                 </div>
             </div>
         </div>
@@ -616,6 +645,14 @@ function sound(val){
         }else if (val == false){
             sounds[i].volume = 0
         }
+    }
+}
+
+function soundMusic(musicVol){
+    if (musicVol == true){
+        music.volume = 0.3
+    } else if(musicVol == false){
+        music.volume = 0
     }
 }
 
