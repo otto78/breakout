@@ -159,10 +159,10 @@ function ballMove(){
 // ----------------------------------------------------------
 // level 1
 function addbricks(){
-    for(let j=0; j<1; j++){
-        for(let i=0; i<8; i++){          
-            let x = 10 + i*10
-            let y = 65 + j*5
+    for(let j=0; j<2; j++){
+        for(let i=0; i<6; i++){          
+            let x = 8 + i*15
+            let y = 65 + j*13
             bricks.push(new Brick(x,y))
         }
     }
@@ -180,10 +180,10 @@ function addbricks(){
 
 // level 2
 function addBricks2(){
-    for(let j=0; j<2; j++){
-        for(let i=0; i<8; i++){          
-            let x = 10 + i*10
-            let y = 65 + j*5
+    for(let j=0; j<3; j++){
+        for(let i=0; i<7; i++){          
+            let x = 6 + i*13
+            let y = 65 + j*10
             bricks.push(new Brick(x,y))
         }
     }
@@ -201,10 +201,10 @@ function addBricks2(){
 
 // level 3
 function addBricks3(){
-    for(let j=0; j<3; j++){
-        for(let i=0; i<8; i++){        
-            let x = 10 + i*10
-            let y = 65 + j*5
+    for(let j=0; j<4; j++){
+        for(let i=0; i<7; i++){        
+            let x = 9 + i*12
+            let y = 60 + j*8
             bricks.push(new Brick(x,y))
         }
     }
@@ -222,10 +222,10 @@ function addBricks3(){
 
 // level Bonus
 function addBricks4(){
-    for(let j=0; j<4; j++){
+    for(let j=0; j<5; j++){
         for(let i=0; i<8; i++){           
-            let x = 10 + i*10
-            let y = 65 + j*5
+            let x = 6.5 + i*11
+            let y = 55 + j*7
             bricks.push(new Brick(x,y))
         }
     }
@@ -294,7 +294,7 @@ function rePlay(){
         mattoni[i].remove()
     }
     mattoni = []   
-    addbricks() 
+    addbricks()
     domBoard.addEventListener('click', ballMove)
 }
 
