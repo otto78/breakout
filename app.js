@@ -116,7 +116,8 @@ function movePadMouse(e) {
         pad.left = (board.width-pad.width)
     }else{
         padPosition = pointer - pad.width/2;
-        pad.move(padPosition)   
+        pad.move(padPosition)
+        
     }      
 }
 
